@@ -18,13 +18,14 @@
 		return Math.random() * (end - start) + start;
 	}
 
-	var tmp = null;
 	explosion = {
-		W : tmp=document.createElement("canvas"),
-		C : document.body.appendChild(tmp).getContext("2d"),
+		init:function() {
+			this.W = tmp=document.createElement("canvas");
+			this.C = document.body.appendChild(this.W).getContext("2d");
+		},
 		cx : 2,
 		cy : 2,
-		rad : 100.2,
+		rad : 120,
 		finished : true,
 		rayColors : [],
 		rawColors : [
@@ -33,13 +34,13 @@
 			'#8F0'
 		],
 		rays : [],
+		globalAlpha : 0,
 		explode : function(x, y) {
-
-			this.cx = x;
-			this.cy = y;
+			this.globalAlpha = 1;
+			this.cx = x*32;
+			this.cy = y*32;
 			this.rays = [];
 			this.rayColors = [];
-			this.C.globalAlpha = 1;
 			this.finished = false;
 
 			for(var i = 0; i < this.rawColors.length; i++) {
@@ -64,14 +65,15 @@
 
 		},
 		draw : function() {
+			this.C.clearRect(0,0,ww,wh);
 			if(this.finished) return;
 			console.log('drawing', this.rays.length);
-			this.C.clearRect(0,0,ww,wh);
 			var step = 0;
+			this.C.globalAlpha = this.globalAlpha;
 			for(var i = 0; i < this.rays.length; i++) {
 				var ray = this.rays[i];
 				this.C.beginPath();
-				this.C.lineWidth = ray.alpha * 0.05;
+				this.C.lineWidth = ray.alpha * 20;
 				this.C.strokeStyle = this.rayColors[ray.color];
 				this.C.shadowColor = this.rawColors[ray.color];
 				this.C.shadowBlur = ray.alpha*20;
@@ -89,12 +91,11 @@
 				this.C.closePath();
 			}
 			if(Math.abs(this.rays[0].step - 1) < 0.8) {
-				this.C.globalAlpha *= 0.85;
+				this.globalAlpha *= 0.85;
 			}
-			if(this.C.globalAlpha < 0.01) {
+			if(this.globalAlpha < 0.1) {
 				this.finished = true;
-				this.C.clearRect(0,0,ww,wh);
-				this.C.globalAlpha = 0;
+				this.globalAlpha = 0;
 			}
 		}
 	}

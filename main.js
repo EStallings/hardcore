@@ -1,7 +1,8 @@
 with((D=document).body.appendChild(W=D.createElement("canvas")).getContext("2d"))with(Math){
+explosion.init();
 var resizeableCanvases = [W, peopleSprites.W, explosion.W];
 (onresize=e=>resizeableCanvases.map(c=>{c.width=ww=innerWidth;c.height=wh=innerHeight;}))();
-explosion.C.scale(128, 128);
+
 //==  USER DEFINABLES  =======================================================//
 
 var updateInterval    = 1000;
@@ -132,7 +133,9 @@ onmouseup =_=> animating = true;
 //==  MAIN LOOP  =============================================================//
 
 var tick=performance.now(),prevTick=tick;
-(loop = _ => pushPop(_=>{animating && requestAnimationFrame(loop);prevTick=tick;tick=performance.now();clearRect(0,0,ww,wh);peopleSprites.clear();
+(loop = _ => pushPop(_=>{animating && requestAnimationFrame(loop);
+	prevTick=tick;tick=performance.now();
+	resizeableCanvases.map(i=>i.getContext('2d').clearRect(0,0,ww,wh));
 
 	resizeableCanvases.map(i=>i.getContext('2d').translate(ww/2,wh/2));
 
@@ -152,7 +155,6 @@ var tick=performance.now(),prevTick=tick;
 
 		var progress = clamp((tick-updateTick)/animationInterval,0,1);
 		var invP = 1-progress;
-		explosion.draw();
 		throng.sort((a,b)=>a.y-b.y);
 		throng.map(i=>actionSwitch(i.activeAction,
 			_=>peopleSprites.drawPerson(i.x,i.y,i.spriteId,tick),
@@ -164,6 +166,7 @@ var tick=performance.now(),prevTick=tick;
 
 		rgb(1,0,0);fillCircle(P1.person.x,P1.person.y,0.5);
 		rgb(0,1,0);fillCircle(P2.person.x,P2.person.y,0.5);
+		explosion.draw();
 	});
 
 
