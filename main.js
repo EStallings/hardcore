@@ -1,6 +1,8 @@
 with((D=document).body.appendChild(W=D.createElement("canvas")).getContext("2d"))with(Math){
 explosion.init();
-var resizeableCanvases = [W, peopleSprites.W, explosion.W];
+var resizeableCanvases = [W, peopleSprites.W, explosion.W, personDeathEffects.W];
+var resizeableCtxs = [];
+resizeableCanvases.map(i=>resizeableCtxs.push(i.getContext('2d')));
 (onresize=e=>resizeableCanvases.map(c=>{c.width=ww=innerWidth;c.height=wh=innerHeight;}))();
 
 //==  USER DEFINABLES  =======================================================//
@@ -19,7 +21,7 @@ var clamp = (i,n,x) => min(max(i,n),x);
 
 //var rgb = (r,g,b,a) => fillStyle=strokeStyle=shadowColor=`rgba(${~~(255*r)},${~~(255*g)},${~~(255*b)},${a===0?0:a||1})`;
 var rgb = (r,g,b,a) => fillStyle=strokeStyle=shadowColor="rgba("+~~(255*r)+","+~~(255*g)+","+~~(255*b)+","+(a===0?0:a||1)+")";
-var pushPop = f => { resizeableCanvases.map(i=>i.getContext('2d').save()); f(); resizeableCanvases.map(i=>i.getContext('2d').restore()); };
+var pushPop = f => { resizeableCtxs.map(i=>i.save()); f(); resizeableCtxs.map(i=>i.restore()); };
 var fillCircle = (x,y,r) => { beginPath(); arc(x,y,r,0,2*PI); fill(); };
 
 var id =_=>0;
@@ -135,18 +137,11 @@ onmouseup =_=> animating = true;
 var tick=performance.now(),prevTick=tick;
 (loop = _ => pushPop(_=>{animating && requestAnimationFrame(loop);
 	prevTick=tick;tick=performance.now();
-	resizeableCanvases.map(i=>i.getContext('2d').clearRect(0,0,ww,wh));
-
-	resizeableCanvases.map(i=>i.getContext('2d').translate(ww/2,wh/2));
+	resizeableCtxs.map(i=>i.clearRect(0,0,ww,wh));
+	resizeableCtxs.map(i=>i.translate(ww/2,wh/2));
 
 	pushPop(_=>{
-//		resizeableCanvases.map(i=>i.getContext('2d').scale(renderScale,renderScale));
-		resizeableCanvases.map(i=>i.getContext('2d').translate(-renderScale*gw/2,-renderScale*gh/2));
-		// resizeableCanvases.map(i=>i.getContext('2d').translate(0.5,0.5));
-
-		// scale(renderScale,renderScale);
-		// translate(-gw/2,-gh/2);
-		// translate(0.5,0.5);
+		resizeableCtxs.map(i=>i.translate(-renderScale*gw/2,-renderScale*gh/2));
 
 		rgb(0,0,0,0.3);
 
@@ -167,6 +162,7 @@ var tick=performance.now(),prevTick=tick;
 		rgb(1,0,0);fillCircle(P1.person.x,P1.person.y,0.5);
 		rgb(0,1,0);fillCircle(P2.person.x,P2.person.y,0.5);
 		explosion.draw();
+		personDeathEffects.process();
 	});
 
 
@@ -187,6 +183,7 @@ var tick=performance.now(),prevTick=tick;
 			if(y<gh-1)adjacentCells=adjacentCells.concat(grid[x][y+1]);
 			adjacentCells.map(j=>{
 				throng.splice(throng.indexOf(j),1);
+				personDeathEffects.newEffect(j.x, j.y,2);
 				if(j.player)deads.push(j.player);
 				if(i===j)return;
 				if(j.player)i.player.points += 5;

@@ -37,8 +37,8 @@
 		globalAlpha : 0,
 		explode : function(x, y) {
 			this.globalAlpha = 1;
-			this.cx = x*32;
-			this.cy = y*32;
+			this.cx = (x+.5)*32;
+			this.cy = (y+.5)*32;
 			this.rays = [];
 			this.rayColors = [];
 			this.finished = false;
@@ -50,7 +50,7 @@
 				this.rayColors[i] = grd;
 			}
 
-			for(var i = 0; i < Math.PI*2; i += 0.06) {
+			for(var i = 0; i < Math.PI*2; i += 0.1) {
 				var ray = {};
 				ray.a = i;
 				ray.goalr = rand(2*this.rad/3) + this.rad/3;
@@ -67,7 +67,6 @@
 		draw : function() {
 			this.C.clearRect(0,0,ww,wh);
 			if(this.finished) return;
-			console.log('drawing', this.rays.length);
 			var step = 0;
 			this.C.globalAlpha = this.globalAlpha;
 			for(var i = 0; i < this.rays.length; i++) {

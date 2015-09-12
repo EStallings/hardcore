@@ -26,11 +26,16 @@ personDeathEffects = {
 	effects: [],
 	W : tmp=document.createElement("canvas"),
 	C : document.body.appendChild(tmp).getContext("2d"),
+	init : function() {
+		// this.C.scale(128, 128);
+		this.initialized = true;
+	},
 	newEffect : function(x, y, flairColor) {
 		this.effects.push(new this.personDeathEffect(x, y, flairColor));
 	},
 	process : function() {
-		this.C.clearRect(0,0,ww,wh);
+		this.C.fillStyle = '#000';
+		this.C.fillRect(0,0,20,20);
 		var nextEffects = [];
 		for(var i = 0; i < this.effects.length; i++) {
 			this.effects[i].drawParts();
@@ -39,6 +44,7 @@ personDeathEffects = {
 		this.effects = nextEffects;
 	},
 	personDeathEffect : function(x, y, flairColor) {
+		if(!personDeathEffects.initialized) personDeathEffects.init();
 		this.parts = [];
 		this.color = flairColor;
 		this.finished = false;
@@ -75,10 +81,6 @@ personDeathEffects = {
 		}
 	}
 }
-personDeathEffects.W.width = ww;
-personDeathEffects.W.height = wh;
-resizableCanvases.push(personDeathEffects.W);
-personDeathEffects.C.scale(32, 32);
 
 // personDeathEffects.newEffect(i, j*2, flairColors[rint(flairColors.length)]);
 
