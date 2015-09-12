@@ -25,7 +25,7 @@
 		},
 		cx : 2,
 		cy : 2,
-		rad : 120,
+		rad : 84,
 		finished : true,
 		rayColors : [],
 		rawColors : [
@@ -37,8 +37,8 @@
 		globalAlpha : 0,
 		explode : function(x, y) {
 			this.globalAlpha = 1;
-			this.cx = (x+.5)*32;
-			this.cy = (y+.5)*32;
+			this.cx = (x+1.5)*32;
+			this.cy = (y+1.5)*32;
 			this.rays = [];
 			this.rayColors = [];
 			this.finished = false;
