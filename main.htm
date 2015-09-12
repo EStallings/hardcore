@@ -2,7 +2,7 @@
 with((D=document).body.appendChild(W=D.createElement("canvas")).getContext("2d"))with(Math){
 (onresize=e=>{W.width=ww=innerWidth;W.height=wh=innerHeight;})();
 
-clamp = function (i,n,x) {return min(max(i,n),x); }
+var clamp = (i,n,x) => min(max(i,n),x);
 
 var rgb = (r,g,b,a) => fillStyle=strokeStyle=shadowColor=`rgba(${~~(255*r)},${~~(255*g)},${~~(255*b)},${a===0?0:a||1})`;
 var pushPop = f => { save(); f(); restore(); };
