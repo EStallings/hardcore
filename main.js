@@ -183,7 +183,8 @@ var tick=performance.now(),prevTick=tick;
 			if(y<gh-1)adjacentCells=adjacentCells.concat(grid[x][y+1]);
 			adjacentCells.map(j=>{
 				throng.splice(throng.indexOf(j),1);
-				personDeathEffects.newEffect(j.x, j.y,2);
+				console.log(j);
+				personDeathEffects.newEffect(j.x, j.y,peopleSprites.sprites[j.spriteId].flairColor);
 				if(j.player)deads.push(j.player);
 				if(i===j)return;
 				if(j.player)i.player.points += 5;
