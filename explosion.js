@@ -67,7 +67,6 @@ var resizableCanvases = [];
 		},
 		draw : function() {
 			if(this.finished) return;
-			console.log('drawing', this.rays.length);
 			this.C.clearRect(0,0,ww,wh);
 			var step = 0;
 			for(var i = 0; i < this.rays.length; i++) {
