@@ -1,0 +1,168 @@
+<html><head><meta charset="UTF-8"><style>*{position:absolute;margin:0px;}</style></head><body><script>
+with((D=document).body.appendChild(W=D.createElement("canvas")).getContext("2d"))with(Math){
+(onresize=e=>{W.width=ww=innerWidth;W.height=wh=innerHeight;})();
+
+Math.clamp = function (i,n,x) min(max(i,n),x);
+
+var rgb = (r,g,b,a) => fillStyle=strokeStyle=shadowColor=`rgba(${~~(255*r)},${~~(255*g)},${~~(255*b)},${a===0?0:a||1})`;
+var pushPop = f => { save(); f(); restore(); };
+var fillCircle = (x,y,r) => { beginPath(); arc(x,y,r,0,2*PI); fill(); }
+
+//============================================================================//
+
+var updateInterval    = 100;
+var animationInterval = 100;
+
+var gw = 10;
+var gh = 10;
+
+var renderScale = 32;
+
+//============================================================================//
+
+animationInterval = min(updateInterval,animationInterval);
+var updateTick = performance.now();
+
+var NONE  = 0;
+var NORTH = 1;
+var SOUTH = 2;
+var EAST  = 3;
+var WEST  = 4;
+
+var dirSwitch = (d,x,n,s,e,w) => {
+	switch(d){
+		case NONE : x(); break;
+		case NORTH: n(); break;
+		case SOUTH: s(); break;
+		case EAST : e(); break;
+		case WEST : w(); break;
+	}
+};
+
+function cell () {}
+
+var grid = []
+for (var i=0;i<gw;++i) {
+	grid[i] = [];
+	for (var j=0;j<gh;++j) grid[i][j] = new cell();
+}
+
+var personLs = [];
+function person (x,y) {
+	personLs.push(this);
+	this.x = x;
+	this.y = y;
+	this.pendingDir = NONE;
+	this.activeDir  = NONE;
+	this.update     =_=>{
+		this.activeDir = this.pendingDir;
+		this.pendingDir = NONE;
+		dirSwitch(this.activeDir,_=>0,
+			_=>{--this.y;if(this.y< 0 ){this.y=   0;this.activeDir=NONE}},
+			_=>{++this.y;if(this.y>=gh){this.y=gh-1;this.activeDir=NONE}},
+			_=>{--this.x;if(this.x< 0 ){this.x=   0;this.activeDir=NONE}},
+			_=>{++this.x;if(this.x>=gw){this.x=gw-1;this.activeDir=NONE}});
+	}
+
+//============================================================================//
+
+var testPerson = new person(4,4);
+
+onkeydown = e => {
+	switch(e.keyCode){
+		case 87: testPerson.pendingDir = NORTH; break; // W
+		case 65: testPerson.pendingDir = EAST;  break; // A
+		case 83: testPerson.pendingDir = SOUTH; break; // S
+		case 68: testPerson.pendingDir = WEST;  break; // D
+	}
+}
+
+//============================================================================//
+
+var tick=performance.now(),prevTick=tick;
+(loop=_=>pushPop(_=>{requestAnimationFrame(loop);prevTick=tick;tick=performance.now();clearRect(0,0,ww,wh);
+
+	if (tick%updateInterval<prevTick%updateInterval) {
+		updateTick = tick;
+		personLs.map(i=>i.update());
+	}
+
+	translate(10,10);
+
+	pushPop(_=>{
+		scale(renderScale,renderScale);
+		translate(0.5,0.5);
+
+		rgb(0,0,0);
+
+		for(var i=0;i<gw;++i)for(var j=0;j<gh;++j)
+			fillCircle(i,j,0.05);
+
+		var progress = clamp((tick-updateTick)/animationInterval,0,1);
+		var invP = 1-progress;
+		personLs.map(i=>dirSwitch(i.activeDir,
+			_=>fillCircle(i.x,i.y,0.5),
+			_=>fillCircle(i.x,i.y+invP,0.5),
+			_=>fillCircle(i.x,i.y-invP,0.5),
+			_=>fillCircle(i.x+invP,i.y,0.5),
+			_=>fillCircle(i.x-invP,i.y,0.5)
+		));
+	});
+}))();
+
+}</script></body></html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
