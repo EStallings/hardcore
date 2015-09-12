@@ -1,0 +1,154 @@
+<html><head><meta charset="UTF-8"><style>*{position:absolute;margin:0px;}</style></head><body><script>
+with(Math){
+C = (D=document).body.appendChild(W=D.createElement("canvas")).getContext("2d");
+(onresize=function(e){W.width=ww=innerWidth;W.height=wh=innerHeight;})();
+
+	function rint(n) { return Math.floor(Math.random()*n); }
+	
+	var outlineWidth = 0.02;
+
+	function rangeVar(start, end) {
+		return Math.random() * (end - start) + start;
+	}
+
+	C.scale(128, 128);
+	C.fillStyle = '#0f0';
+	C.fillRect(0,0,1,1);
+	C.fillRect(0,2,20,1);
+	C.fillStyle = '#00F';
+	C.fillRect(0,1,1,1);
+
+	function head(x, shouldy, bodyHeight, headWidth, headHeight, headGap, headColor, flairColor, shadesType) {
+		C.fillStyle = headColor;
+		C.shadowColor = flairColor;
+		C.shadowBlur = 20;
+		C.fillRect(x, shouldy-bodyHeight-headGap, headWidth, headHeight);
+		C.fillStyle = '#000';
+		switch(shadesType) {
+			case 0:
+				C.fillRect(x, shouldy-bodyHeight-headGap+0.25, headWidth, 0.07);
+				C.fillRect(x+0.15, shouldy-bodyHeight-headGap+0.2, 0.2, 0.2);
+				C.fillRect(x+headWidth-0.25, shouldy-bodyHeight-headGap+0.2, 0.2, 0.2);
+				break;
+			case 1:
+				C.fillRect(x, shouldy-bodyHeight-headGap+0.2, headWidth, 0.07);
+				C.fillRect(x+0.15, shouldy-bodyHeight-headGap+0.2, 0.2, 0.2);
+				C.fillRect(x+headWidth-0.25, shouldy-bodyHeight-headGap+0.2, 0.2, 0.2);
+				break;
+			case 2:
+				C.fillRect(x, shouldy-bodyHeight-headGap+0.2, headWidth, 0.07);
+				C.fillRect(x, shouldy-bodyHeight-headGap+0.3, headWidth, 0.07);
+				break;
+			
+		}
+	}
+
+	function bodyPill(x, hipy, shouldy, bodywidth, bodyHeight, shirtColor, flairColor, clothesType) {
+		C.shadowColor = flairColor;
+		C.shadowBlur = 20;
+		C.strokeStyle = shirtColor;
+		C.lineWidth = bodyWidth;
+	
+		C.beginPath();
+		C.moveTo(x+0.5, hipy+0.9);
+		C.lineTo(x+0.5, shouldy+0.5);
+		C.stroke();
+		C.closePath();
+
+		C.fillStyle = flairColor;
+		C.strokeStyle = flairColor;
+		switch(clothesType) {
+			case 0:
+				C.fillRect(x+0.5, shouldy+0.5, 0.1, 0.35);
+				break;
+			case 1:
+				C.beginPath();
+				C.lineWidth = 0.1;
+				C.moveTo(x+0.45, shouldy+0.5);
+				C.lineTo(x+0.5, shouldy+0.2+bodyHeight + bodyWidth/2);
+				C.stroke();
+				C.moveTo(x+0.55, shouldy+0.5);
+				C.lineTo(x+0.5, shouldy+0.2+bodyHeight + bodyWidth/2);
+				C.stroke();
+				// C.fillRect(x+0.3, shouldy+0.5, 0.1, bodyHeight + bodyWidth/2);
+				// C.fillRect(x+0.6, shouldy+0.5, 0.1, bodyHeight + bodyWidth/2);
+				break;
+			case 2:
+				C.beginPath();
+				C.lineWidth = 0.1;
+				C.moveTo(x+0.45, shouldy+0.5);
+				C.lineTo(x+0.65, shouldy+0.5+bodyHeight + bodyWidth/2);
+				C.stroke();
+				// C.moveTo(x+0.55, shouldy+0.5);
+				// C.lineTo(x+0.75, shouldy+0.5+bodyHeight + bodyWidth/2);
+				// C.stroke();
+				// C.fillRect(x+0.3, shouldy+0.5, 0.1, bodyHeight + bodyWidth/2);
+				// C.fillRect(x+0.6, shouldy+0.5, 0.1, bodyHeight + bodyWidth/2);
+				C.fillRect(x+0.65, shouldy+0.6, 0.15, 0.1);
+				C.fillRect(x+0.2, shouldy+0.6, 0.15, 0.1);
+				break;
+			case 3:
+				C.fillRect(x+0.3, shouldy+0.5, 0.05, bodyHeight + bodyWidth/2);
+				C.fillRect(x+0.6, shouldy+0.65, 0.1, 0.1);
+				C.fillRect(x+0.6, shouldy+0.85, 0.1, 0.1);
+				break;
+			default:
+				console.err("No clothesType! " + clothesType);
+				
+		}
+
+	}
+
+	var shirtColors = [
+		'#333',
+		'#444',
+		'#222',
+		'#353535'
+	]
+
+	var flairColors = [
+		'#f80',
+		'#f08',
+		'#8f0',
+		'#0f8',
+		'#80f',
+		'#08f',
+	]
+
+	var skinTones = [
+		'#FFDCB1',
+		'#E5C298',
+		'#CC8443',
+		'#C77A58',
+		'#440000',
+		'#BE723C',
+		'#DFB997'
+	]
+
+	for(var i = 1; i < 10; i++) {
+		var shirtColor = shirtColors[rint(shirtColors.length)];
+		var headColor = skinTones[rint(skinTones.length)];
+		var flairColor = flairColors[rint(flairColors.length)];
+		var clothesType = rint(4);
+		var shadesType = rint(3);
+
+		var x = i;
+		var y = 1;
+		var bodyHeight = rangeVar(0.35, 0.44);
+
+		var hipy = y+0.1;
+		var shouldy = hipy - bodyHeight;
+		var bodyWidth = rangeVar(0.81, 0.7);
+		
+		var headRadius = rangeVar(0.67, 0.70);
+		var headWidth = headRadius;
+		var headHeight = headRadius;
+		var headGap = -0.05;
+	
+		bodyPill(x, hipy, shouldy, bodyWidth, bodyHeight, shirtColor, flairColor, clothesType);
+		head(x+(1-headWidth)/2,shouldy, bodyHeight, headWidth, headHeight, headGap, headColor, flairColor, shadesType);
+	}
+
+
+
+}</script></body></html>t
