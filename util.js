@@ -83,8 +83,8 @@ function drawPerson(p) {
 }
 
 var pantColors = ['#997A00','#2E2500','#7A7A52','#3E4554','#CCCCCC','#001433','#001F7A'];
-var shirtColors = ['#7D7D00','#E64848','#9933FF','#009900','#B2B28F','#8A2E2E','#E62E00','#CCCC00','#005266','#333300','#00523D','#3D3D29','#A3A375','#CCFF66']
-var skinTones = ['#FFDCB1','#E5C298','#CC8443','#C77A58','#440000','#BE723C','#DFB997']
+var shirtColors = ['#7D7D00','#E64848','#9933FF','#009900','#B2B28F','#8A2E2E','#E62E00','#CCCC00','#005266','#333300','#00523D','#3D3D29','#A3A375','#CCFF66'];
+var skinTones = ['#FFDCB1','#E5C298','#CC8443','#C77A58','#440000','#BE723C','#DFB997'];
 function rint(n) { return Math.floor(Math.random()*n); }
 
 var outlineWidth = 0.02;
