@@ -4,7 +4,7 @@ with((D=document).body.appendChild(W=D.createElement("canvas")).getContext("2d")
 
 //==  USER DEFINABLES  =======================================================//
 
-var updateInterval    = 500;
+var updateInterval    = 1000;
 var animationInterval = 100;
 
 var gw = 10;
@@ -30,7 +30,6 @@ var NORTH = 1;
 var SOUTH = 2;
 var EAST  = 3;
 var WEST  = 4;
-var BOMB  = 5;
 
 var dirSwitch = (d,x,n,s,e,w) => {
 	switch(d){
@@ -42,7 +41,7 @@ var dirSwitch = (d,x,n,s,e,w) => {
 	}
 };
 
-var grid =_=>{
+function gridify () {
 	var retVal = [];
 	for (var i=0;i<gw;++i) {
 		retVal[i] = [];
@@ -55,64 +54,51 @@ var grid =_=>{
 var throng = [];
 function person (x,y) {
 	throng.push(this);
+	this.x = x; this.newX = x;
+	this.y = y; this.newY = y;
 
-	this.x = x;
-	this.y = y;
 	this.pendingDir = NONE;
 	this.activeDir  = NONE;
-	this.player = undefined;
-	this.alive = true;
-
-	this.update     =_=>{
-		this.activeDir = this.pendingDir;
-		this.pendingDir = NONE;
-		dirSwitch(this.activeDir,_=>0,
-			_=>{--this.y;if(this.y< 0 ){this.y=   0;this.activeDir=NONE}},
-			_=>{++this.y;if(this.y>=gh){this.y=gh-1;this.activeDir=NONE}},
-			_=>{--this.x;if(this.x< 0 ){this.x=   0;this.activeDir=NONE}},
-			_=>{++this.x;if(this.x>=gw){this.x=gw-1;this.activeDir=NONE}});
-	}
 }
 
-var playerLs = [];
-function player (ctlU,ctlD,ctlL,ctlR,ctlB) {
-	playerLs.push(this);
-	this.person = undefined;
-	this.score = 0;
-	this.ctlU = ctlU;
-	this.ctlD = ctlD;
-	this.ctlL = ctlL;
-	this.ctlR = ctlR;
-	this.ctlB = ctlB;
+var processThrong =_=>{
+	throng.sort(_=>random()-0.5); // randomize update list
+	throng.map(i=>{
+		i.activeDir = i.pendingDir;
+		i.pendingDir = NONE;
+		i.newX = i.x;
+		i.newY = i.y;
+		dirSwitch(i.activeDir,_=>0,
+			_=>{--i.newY;if(i.newY< 0 ){i.newY=   0;i.activeDir=NONE}},
+			_=>{++i.newY;if(i.newY>=gh){i.newY=gh-1;i.activeDir=NONE}},
+			_=>{--i.newX;if(i.newX< 0 ){i.newX=   0;i.activeDir=NONE}},
+			_=>{++i.newX;if(i.newX>=gw){i.newX=gw-1;i.activeDir=NONE}});
+	});
+	throng.sort((a,b)=>a.activeDir===NONE?-1:1); // bring non-moving persons to front
+	var newGrid = new gridify();
+	throng.map(i=>{
+		if(!newGrid[i.newX][i.newY]){
+			newGrid[i.newX][i.newY]=i;
+			i.x = i.newX;
+			i.y = i.newY;
+		} else i.activeDir=NONE;
+	});
 
-	(this.reassign =_=>{
-		while(true){
-			var p = throng[~~(random()*throng.length)];
-			if (p.alive && !p.player) {
-				this.person = p;
-				p.player = this;
-				break;
-			}
-		}
-	})();
-}
+	throng.map(i=>i.pendingDir=~~(random()*5));
+};
 
 //==  TESTING  ===============================================================//
 
-for (var i=0;i<10;++i) new person(~~(random()*(gw-2))+1,~~(random()*(gh-2))+1);
-
-new player(87,83,65,68,81);
-new player(79,76,75,59,73);
+var testPerson = new person(0,0);
+for (var i=0;i<20;++i) new person(~~(random()*(gw-2))+1,~~(random()*(gh-2))+1);
 
 onkeydown = e => {
-	var k = e.keyCode;
-	playerLs.map(i=>{
-		if(k===i.ctlU)i.person.pendingDir = NORTH;
-		if(k===i.ctlL)i.person.pendingDir = EAST;
-		if(k===i.ctlD)i.person.pendingDir = SOUTH;
-		if(k===i.ctlR)i.person.pendingDir = WEST;
-		if(k===i.ctlB)i.person.pendingDir = BOMB;
-	});
+	switch(e.keyCode){
+		case 87: testPerson.pendingDir = NORTH; break; // W
+		case 65: testPerson.pendingDir = EAST;  break; // A
+		case 83: testPerson.pendingDir = SOUTH; break; // S
+		case 68: testPerson.pendingDir = WEST;  break; // D
+	}
 }
 
 //==  MAIN LOOP  =============================================================//
@@ -122,8 +108,7 @@ var tick=performance.now(),prevTick=tick;
 
 	if (tick%updateInterval<prevTick%updateInterval) {
 		updateTick = tick;
-		throng.map(i=>i.update());
-		throng.map((e,i)=>{if(!e.player)e.pendingDir = ~~(random()*5)}); // DELETE
+		processThrong();
 	}
 
 	translate(ww/2,wh/2);
