@@ -150,7 +150,7 @@ var tick=performance.now(),prevTick=tick;
 
 		var progress = clamp((tick-updateTick)/animationInterval,0,1);
 		var invP = 1-progress;
-		throng.sort((a,b)=>a.y-b.y);
+		throng.sort((a,b)=>{if(a.y == b.y){return a.spriteId-b.spriteId} return a.y-b.y});
 		throng.map(i=>actionSwitch(i.activeAction,
 			_=>peopleSprites.drawPerson(i.x,i.y,i.spriteId,tick),
 			_=>peopleSprites.drawPerson(i.x,i.y+invP,i.spriteId,tick),
