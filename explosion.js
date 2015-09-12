@@ -22,11 +22,11 @@ C = (D=document).body.appendChild(W=D.createElement("canvas")).getContext("2d");
 		return Math.random() * (end - start) + start;
 	}
 
-	// C.scale(128, 128);
+	C.scale(128, 128);
 	
 	var cx = ww/2;
 	var cy = wh/2;
-	var rad = 300;
+	var rad = 3;
 
 	var rawColors = [
 		// '#F29822',
