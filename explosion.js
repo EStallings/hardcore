@@ -1,9 +1,9 @@
-var resizableCanvases = [];
+	var resizableCanvases = [];
 	ww = innerWidth;
 	wh = innerHeight;
 	function rint(n) { return Math.floor(Math.random()*n); }
 	function rand(n) { return Math.random()*n; }
-
+	
 	function lerp(v0, v1, t) {
 		return (1-t)*v0 + t*v1;
 	}
@@ -21,9 +21,10 @@ var resizableCanvases = [];
 		return Math.random() * (end - start) + start;
 	}
 
+	var tmp = null;
 	explosion = {
-		W : W=document.createElement("canvas"),
-		C : document.body.appendChild(this.W).getContext("2d"),
+		W : tmp=document.createElement("canvas"),
+		C : document.body.appendChild(tmp).getContext("2d"),
 		cx : 2,
 		cy : 2,
 		rad : 1.2,
@@ -36,7 +37,7 @@ var resizableCanvases = [];
 		],
 		rays : [],
 		explode : function(x, y) {
-
+			
 			this.cx = x;
 			this.cy = y;
 			this.rays = [];
@@ -67,6 +68,7 @@ var resizableCanvases = [];
 		},
 		draw : function() {
 			if(this.finished) return;
+			console.log('drawing', this.rays.length);
 			this.C.clearRect(0,0,ww,wh);
 			var step = 0;
 			for(var i = 0; i < this.rays.length; i++) {
@@ -101,10 +103,11 @@ var resizableCanvases = [];
 	}
 	explosion.W.width = ww;explosion.W.height = wh;
 	resizableCanvases.push(explosion.W);
-	explosion.C.scale(32, 32);
-
+	explosion.C.scale(128, 128);
+	
 	// explosion.explode(2, 2);
-	function draw() {
-		explosion.draw();
-		requestAnimationFrame(draw);
-	}draw();
+	// function draw() {
+	// 	explosion.draw();
+	// 	requestAnimationFrame(draw);
+	// }draw();
+	// 
