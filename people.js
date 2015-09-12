@@ -124,44 +124,44 @@ peopleSprites = {
 		}
 	},
 	sprites : [],
-	makePeople : function(n) {
-		this.sprites = [];
-		for(var i = 0; i < n; i++) {
-			var headCvs, bodyCvs;
-			var headCtx = document.body.appendChild(headCvs=document.createElement("canvas")).getContext("2d");
-			var bodyCtx = document.body.appendChild(bodyCvs=document.createElement("canvas")).getContext("2d");
-			bodyCvs.width = bodyCvs.height = headCvs.width = headCvs.height = 64;
-			headCtx.scale(32, 32);
-			bodyCtx.scale(32, 32);
-			var shirtColor = this.shirtColors[rint(this.shirtColors.length)];
-			var headColor = this.skinTones[rint(this.skinTones.length)];
-			var flairColor = this.flairColors[rint(this.flairColors.length)];
-			var clothesType = rint(4);
-			var shadesType = rint(3);
+	makePerson : function() {
+		var headCvs, bodyCvs;
+		var headCtx = document.body.appendChild(headCvs=document.createElement("canvas")).getContext("2d");
+		var bodyCtx = document.body.appendChild(bodyCvs=document.createElement("canvas")).getContext("2d");
+		bodyCvs.width = bodyCvs.height = headCvs.width = headCvs.height = 64;
+		headCtx.scale(32, 32);
+		bodyCtx.scale(32, 32);
+		var shirtColor = this.shirtColors[rint(this.shirtColors.length)];
+		var headColor = this.skinTones[rint(this.skinTones.length)];
+		var flairColor = this.flairColors[rint(this.flairColors.length)];
+		var clothesType = rint(4);
+		var shadesType = rint(3);
 
-			var x = 1;
-			var y = 1;
-			var bodyHeight = rangeVar(0.35, 0.44);
+		var x = 1;
+		var y = 1;
+		var bodyHeight = rangeVar(0.35, 0.44);
 
-			var hipy = y+0.1;
-			var shouldy = hipy - bodyHeight;
-			var bodyWidth = rangeVar(0.81, 0.7);
-			
-			var headRadius = rangeVar(0.67, 0.70);
-			var headWidth = headRadius;
-			var headHeight = headRadius;
-			var headGap = -0.05;
+		var hipy = y+0.1;
+		var shouldy = hipy - bodyHeight;
+		var bodyWidth = rangeVar(0.81, 0.7);
+		
+		var headRadius = rangeVar(0.67, 0.70);
+		var headWidth = headRadius;
+		var headHeight = headRadius;
+		var headGap = -0.05;
 
-			this.bodyPill(bodyCtx, x, hipy, shouldy, bodyWidth, bodyHeight, shirtColor, flairColor, clothesType);
-			this.head(headCtx, x+(1-headWidth)/2,shouldy, bodyHeight, headWidth, headHeight, headGap, headColor, flairColor, shadesType);
-			this.sprites.push({headCvs : headCvs, bodyCvs : bodyCvs, flairColor : flairColor});
-			document.body.removeChild(headCvs);
-			document.body.removeChild(bodyCvs);
-		}
+		this.bodyPill(bodyCtx, x, hipy, shouldy, bodyWidth, bodyHeight, shirtColor, flairColor, clothesType);
+		this.head(headCtx, x+(1-headWidth)/2,shouldy, bodyHeight, headWidth, headHeight, headGap, headColor, flairColor, shadesType);
+		this.sprites.push({headCvs : headCvs, bodyCvs : bodyCvs, flairColor : flairColor});
+		document.body.removeChild(headCvs);
+		document.body.removeChild(bodyCvs);
+		return this.sprites.length-1;
 	},
 
 	drawPerson : function(x, y, i, t) {
-		t = Math.sin(t*0.25); //TODO make this match your timing
+		x*=32;
+		y*=32;
+		t = Math.sin(t/60); //TODO make this match your timing
 		var hdx = 1+((i%5)/5-0.5);
 		var hdy = 1+((i%7)/7-0.5);
 	
@@ -177,11 +177,7 @@ peopleSprites = {
 	}
 
 };
-peopleSprites.W.width = ww;peopleSprites.W.height = wh;
-resizableCanvases.push(peopleSprites.W);
-
-
-// peopleSprites.makePeople(30);	
+	
 
 // var frame = 0;
 // function draw() {

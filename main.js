@@ -1,5 +1,5 @@
 with((D=document).body.appendChild(W=D.createElement("canvas")).getContext("2d"))with(Math){
-var resizeableCanvases = [W];(onresize=e=>resizeableCanvases.map(c=>{c.width=ww=innerWidth;c.height=wh=innerHeight;}))();
+var resizeableCanvases = [W,peopleSprites.W];(onresize=e=>resizeableCanvases.map(c=>{c.width=ww=innerWidth;c.height=wh=innerHeight;}))();
 
 //==  USER DEFINABLES  =======================================================//
 
@@ -68,6 +68,7 @@ var person = function (x,y) {
 	this.pendingAction = NONE;
 	this.activeAction  = NONE;
 	this.player = undefined;
+	this.spriteId = peopleSprites.makePerson();
 
 	(this.update =_=>{
 		this.activeAction = this.pendingAction;
@@ -129,7 +130,7 @@ onmouseup =_=> animating = true;
 //==  MAIN LOOP  =============================================================//
 
 var tick=performance.now(),prevTick=tick;
-(loop = _ => pushPop(_=>{animating && requestAnimationFrame(loop);prevTick=tick;tick=performance.now();clearRect(0,0,ww,wh);
+(loop = _ => pushPop(_=>{animating && requestAnimationFrame(loop);prevTick=tick;tick=performance.now();clearRect(0,0,ww,wh);peopleSprites.clear();
 
 	translate(ww/2,wh/2);
 
@@ -145,12 +146,13 @@ var tick=performance.now(),prevTick=tick;
 
 		var progress = clamp((tick-updateTick)/animationInterval,0,1);
 		var invP = 1-progress;
+		throng.sort((a,b)=>a.y-b.y);
 		throng.map(i=>actionSwitch(i.activeAction,
-			_=>fillCircle(i.x,i.y,0.5),
-			_=>fillCircle(i.x,i.y+invP,0.5),
-			_=>fillCircle(i.x,i.y-invP,0.5),
-			_=>fillCircle(i.x+invP,i.y,0.5),
-			_=>fillCircle(i.x-invP,i.y,0.5)
+			_=>peopleSprites.drawPerson(i.x,i.y,i.spriteId,tick),
+			_=>peopleSprites.drawPerson(i.x,i.y+invP,i.spriteId,tick),
+			_=>peopleSprites.drawPerson(i.x,i.y-invP,i.spriteId,tick),
+			_=>peopleSprites.drawPerson(i.x+invP,i.y,i.spriteId,tick),
+			_=>peopleSprites.drawPerson(i.x-invP,i.y,i.spriteId,tick)
 		));
 
 		rgb(1,0,0);fillCircle(P1.person.x,P1.person.y,0.5);
