@@ -1,3 +1,35 @@
+/*
+var personLs = [];
+function person (x,y) {
+	personLs.push(this);
+	this.x = x;
+	this.y = y;
+
+	this.shirtColor = shirtColors[rint(shirtColors.length)];
+	this.pantsColor = pantColors[rint(pantColors.length)];
+	this.headColor = skinTones[rint(skinTones.length)];
+	this.bodyHeight = rangeVar(0.25, 0.4);
+	this.hipy = this.y+0.1;
+	this.shouldy = this.hipy - this.bodyHeight;
+	this.bodyWidth = rangeVar(0.81, 0.7);
+	this.headRadius = rangeVar(0.37, 0.34);
+	this.headGap = rangeVar(0.42, 0.4);
+	this.beltOffset = rangeVar(0.25, 0.1);
+
+	this.pendingDir = NONE;
+	this.activeDir  = NONE;
+	this.update     =_=>{
+		this.activeDir = this.pendingDir;
+		this.pendingDir = NONE;
+		dirSwitch(this.activeDir,_=>0,
+			_=>{--this.y;if(this.y< 0 ){this.y=   0;this.activeDir=NONE}},
+			_=>{++this.y;if(this.y>=gh){this.y=gh-1;this.activeDir=NONE}},
+			_=>{--this.x;if(this.x< 0 ){this.x=   0;this.activeDir=NONE}},
+			_=>{++this.x;if(this.x>=gw){this.x=gw-1;this.activeDir=NONE}});
+	}
+}
+*/
+
 function head(x, shouldy, bodyHeight, headGap, headRadius, headColor) {
 	C.lineWidth = outlineWidth;
 	C.strokeStyle = '#000';
