@@ -1,28 +1,58 @@
 <html><head><meta charset="UTF-8"><style>*{position:absolute;margin:0px;}</style></head><body><script>
-with(Math){
-C = (D=document).body.appendChild(W=D.createElement("canvas")).getContext("2d");
-(onresize=function(e){W.width=ww=innerWidth;W.height=wh=innerHeight;})();
+	var resizableCanvases = [];
+	var ww = innerWidth;
+	var wh = innerHeight;
 
 	function rint(n) { return Math.floor(Math.random()*n); }
-	
+	function easeOutExpo(x) {
+		return -Math.pow( 2, -10 * x ) + 1;
+	}
 	var outlineWidth = 0.02;
 
 	function rangeVar(start, end) {
 		return Math.random() * (end - start) + start;
 	}
 
-	// C.scale(32, 32);
-	C.fillStyle = '#0f0';
-	C.fillRect(0,0,1,1);
-	C.fillRect(0,2,20,1);
-	C.fillStyle = '#00F';
-	C.fillRect(0,1,1,1);
+	function lerp(v0, v1, t) {
+		return (1-t)*v0 + t*v1;
+	}
 
+	function smootherstep(x)
+	{
+		return x*x*x*(x*(x*6 - 15) + 10);
+	}
 
-	function head(C, x, shouldy, bodyHeight, headWidth, headHeight, headGap, headColor, flairColor, shadesType) {
+var tmp = null;
+peopleSprites = {
+	W : tmp=document.createElement("canvas"),
+	C : document.body.appendChild(tmp).getContext("2d"),
+	shirtColors : [
+		'#333',
+		'#444',
+		'#222',
+		'#353535'
+	],
+	flairColors : [
+		'#f80',
+		'#f08',
+		'#8f0',
+		'#0f8',
+		'#80f',
+		'#08f',
+	],
+	skinTones : [
+		'#FFDCB1',
+		'#E5C298',
+		'#CC8443',
+		'#C77A58',
+		'#440000',
+		'#BE723C',
+		'#DFB997'
+	],
+	head : function(C, x, shouldy, bodyHeight, headWidth, headHeight, headGap, headColor, flairColor, shadesType) {
 		C.fillStyle = headColor;
 		C.shadowColor = flairColor;
-		C.shadowBlur = 20;
+		C.shadowBlur = 8;
 		C.fillRect(x, shouldy-bodyHeight-headGap, headWidth, headHeight);
 		C.fillStyle = '#000';
 		switch(shadesType) {
@@ -42,11 +72,10 @@ C = (D=document).body.appendChild(W=D.createElement("canvas")).getContext("2d");
 				break;
 			
 		}
-	}
-
-	function bodyPill(C, x, hipy, shouldy, bodyWidth, bodyHeight, shirtColor, flairColor, clothesType) {
+	},
+	bodyPill : function(C, x, hipy, shouldy, bodyWidth, bodyHeight, shirtColor, flairColor, clothesType) {
 		C.shadowColor = flairColor;
-		C.shadowBlur = 20;
+		C.shadowBlur = 8;
 		C.strokeStyle = shirtColor;
 		C.lineWidth = bodyWidth;
 	
@@ -97,46 +126,20 @@ C = (D=document).body.appendChild(W=D.createElement("canvas")).getContext("2d");
 				console.err("No clothesType! " + clothesType);
 				
 		}
-
-	}
-
-	var shirtColors = [
-		'#333',
-		'#444',
-		'#222',
-		'#353535'
-	]
-
-	var flairColors = [
-		'#f80',
-		'#f08',
-		'#8f0',
-		'#0f8',
-		'#80f',
-		'#08f',
-	]
-
-	var skinTones = [
-		'#FFDCB1',
-		'#E5C298',
-		'#CC8443',
-		'#C77A58',
-		'#440000',
-		'#BE723C',
-		'#DFB997'
-	]
-
-	function makePeople(n) {
-		people = [];
-		for(var i = 1; i < n; i++) {
+	},
+	sprites : [],
+	makePeople : function(n) {
+		this.sprites = [];
+		for(var i = 0; i < n; i++) {
 			var headCvs, bodyCvs;
-			var headCtx = document.body.appendChild(headCvs=D.createElement("canvas")).getContext("2d");
-			var bodyCtx = document.body.appendChild(bodyCvs=D.createElement("canvas")).getContext("2d");
+			var headCtx = document.body.appendChild(headCvs=document.createElement("canvas")).getContext("2d");
+			var bodyCtx = document.body.appendChild(bodyCvs=document.createElement("canvas")).getContext("2d");
+			bodyCvs.width = bodyCvs.height = headCvs.width = headCvs.height = 64;
 			headCtx.scale(32, 32);
 			bodyCtx.scale(32, 32);
-			var shirtColor = shirtColors[rint(shirtColors.length)];
-			var headColor = skinTones[rint(skinTones.length)];
-			var flairColor = flairColors[rint(flairColors.length)];
+			var shirtColor = this.shirtColors[rint(this.shirtColors.length)];
+			var headColor = this.skinTones[rint(this.skinTones.length)];
+			var flairColor = this.flairColors[rint(this.flairColors.length)];
 			var clothesType = rint(4);
 			var shadesType = rint(3);
 
@@ -153,46 +156,53 @@ C = (D=document).body.appendChild(W=D.createElement("canvas")).getContext("2d");
 			var headHeight = headRadius;
 			var headGap = -0.05;
 
-			bodyPill(bodyCtx, x, hipy, shouldy, bodyWidth, bodyHeight, shirtColor, flairColor, clothesType);
-			head(headCtx, x+(1-headWidth)/2,shouldy, bodyHeight, headWidth, headHeight, headGap, headColor, flairColor, shadesType);
-			people.push({headCvs : headCvs, bodyCvs : bodyCvs});
+			this.bodyPill(bodyCtx, x, hipy, shouldy, bodyWidth, bodyHeight, shirtColor, flairColor, clothesType);
+			this.head(headCtx, x+(1-headWidth)/2,shouldy, bodyHeight, headWidth, headHeight, headGap, headColor, flairColor, shadesType);
+			this.sprites.push({headCvs : headCvs, bodyCvs : bodyCvs, flairColor : flairColor});
 			document.body.removeChild(headCvs);
 			document.body.removeChild(bodyCvs);
 		}
-	}
-	makePeople(30);
+	},
 
-	function lerp(v0, v1, t) {
-		return (1-t)*v0 + t*v1;
-	}
-
-	function smootherstep(x)
-	{
-		return x*x*x*(x*(x*6 - 15) + 10);
-	}
-
-	function drawPerson(x, y, i, t) {
-		t = Math.sin(t*0.2);
+	drawPerson : function(x, y, i, t) {
+		t = Math.sin(t*0.25); //TODO make this match your timing
 		var hdx = 1+((i%5)/5-0.5);
 		var hdy = 1+((i%7)/7-0.5);
 	
 		var hx = lerp(-hdx, hdx, t);
 		var hy = lerp(-hdy, hdy, t);
 		var hy2 = lerp(-1, 1, t);
-		// console.log(t, hx, hy);
-		C.drawImage(people[i].bodyCvs, x, y+hy2);
-		C.drawImage(people[i].headCvs, x+hx, y+hy);
+
+		this.C.drawImage(this.sprites[i].bodyCvs, x, y+hy2);
+		this.C.drawImage(this.sprites[i].headCvs, x+hx, y+hy);
+	},
+	clear : function() {
+		this.C.clearRect(0,0,ww,wh);
 	}
 
-	var frame = 0;
-	function draw() {
-		C.clearRect(0,0,ww,wh);
-		for(var i = 0; i < people.length; i++) {
-			drawPerson(i*32, 2, i, frame);
-		}
-		frame++;
-		requestAnimationFrame(draw);
-	}draw();
+};
+peopleSprites.W.width = ww;peopleSprites.W.height = wh;
+resizableCanvases.push(peopleSprites.W);
 
 
-}</script></body></html>t
+
+peopleSprites.makePeople(90);	
+
+var frame = 0;
+function draw() {
+	peopleSprites.clear();
+	for(var i = 0; i < 30; i++) {
+		peopleSprites.drawPerson(i*32, 0, i, frame);
+	}
+	for(var i = 30; i < 60; i++) {
+		peopleSprites.drawPerson((i-30)*32, 32, i, frame);
+	}
+	for(var i = 60; i < 90; i++) {
+		peopleSprites.drawPerson((i-60)*32, 64, i, frame);
+	}
+	frame++;
+	requestAnimationFrame(draw);
+}draw();
+
+
+</script></body></html>t

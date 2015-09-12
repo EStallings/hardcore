@@ -1,22 +1,17 @@
 <html><head><meta charset="UTF-8"><style>*{position:absolute;margin:0px;}</style></head><body><script>
-with(Math){
-C = (D=document).body.appendChild(W=D.createElement("canvas")).getContext("2d");
 
-(onresize=function(e){W.width=ww=innerWidth;W.height=wh=innerHeight;})();
+var resizableCanvases = [];
+ww = innerWidth;
+wh = innerHeight;
 
-	
-
-	// function smootherstep(x)
-	// {
-	// 	return x*x*x*(x*(x*6 - 15) + 10);
-	// }
 
 	function rint(n) { return Math.floor(Math.random()*n); }
 	function lerp(v0, v1, t) {
 		return (1-t)*v0 + t*v1;
 	}
-	function easeOutExpo(x) {
-		return -Math.pow( 2, -10 * x ) + 1;
+
+	function rangeVar(start, end) {
+		return Math.random() * (end - start) + start;
 	}
 
 
@@ -28,13 +23,16 @@ C = (D=document).body.appendChild(W=D.createElement("canvas")).getContext("2d");
 		'#80f',
 		'#08f'
 	];
-
+	var tmp = null;
 	personDeathEffects = {
 		effects: [],
+		W : tmp=document.createElement("canvas"),
+		C : document.body.appendChild(tmp).getContext("2d"),
 		newEffect : function(x, y, flairColor) {
 			this.effects.push(new this.personDeathEffect(x, y, flairColor));
 		},
 		process : function() {
+			this.C.clearRect(0,0,ww,wh);
 			var nextEffects = [];
 			for(var i = 0; i < this.effects.length; i++) {
 				this.effects[i].drawParts();
@@ -45,11 +43,10 @@ C = (D=document).body.appendChild(W=D.createElement("canvas")).getContext("2d");
 		personDeathEffect : function(x, y, flairColor) {
 			this.parts = [];
 			this.color = flairColor;
-			this.C = document.body.appendChild(this.W=D.createElement("canvas")).getContext("2d");
-			this.W.width=innerWidth;this.W.height=innerHeight;
-			this.C.scale(32, 32);
 			this.finished = false;
-			for(var i = 0; i <20; i ++) {
+			this.C = personDeathEffects.C;
+			this.fade = 1;
+			for(var i = 0; i <10; i ++) {
 				var part = {};
 				part.a = i;
 				part.startx = Math.random()-0.5 + x;
@@ -60,35 +57,36 @@ C = (D=document).body.appendChild(W=D.createElement("canvas")).getContext("2d");
 				this.parts.push(part);
 			}
 
-			this.drawParts = function() {
-				this.C.clearRect(0,0,ww,wh);
+			this.drawParts = function() {	
 				var step = 0;
 				this.C.shadowColor = this.color;
-				this.C.fillStyle = 'white';
+				this.C.fillStyle = 'rgba(255,255,255,' + this.fade + ')';
+				var fadeout = (Math.abs(this.parts[0].step - 1) < 0.8);
 				for(var i = 0; i < this.parts.length; i++) {
 					var part = this.parts[i];
 					this.C.shadowBlur = part.alpha*20;
-					this.C.fillRect(part.startx,lerp(part.starty, part.endy, easeOutExpo(part.step)), 0.2, 0.2);
+					this.C.fillRect(part.startx,lerp(part.starty, part.endy, Math.sqrt(part.step)), 0.2, 0.2);
 					part.step = Math.min(part.step + 0.03, 1);
 				}
-				if(Math.abs(this.parts[0].step - 1) < 0.8) {
-					this.C.globalAlpha *= 0.85;
+				if(fadeout) {
+					this.fade *= 0.85;
 				}
-				if(this.C.globalAlpha < 0.01) {
+				if(this.fade < 0.01) {
 					this.finished = true;
-					document.body.removeChild(this.W);
 				}
 			}
 		}
 	}
+	personDeathEffects.W.width = ww;
+	personDeathEffects.W.height = wh;
+	resizableCanvases.push(personDeathEffects.W);
+	personDeathEffects.C.scale(32, 32);
 
-	personDeathEffects.newEffect(1, 2, flairColors[rint(flairColors.length)]);
-	personDeathEffects.newEffect(1, 3, flairColors[rint(flairColors.length)]);
-	personDeathEffects.newEffect(3, 2, flairColors[rint(flairColors.length)]);
-	personDeathEffects.newEffect(3, 3, flairColors[rint(flairColors.length)]);
+	// personDeathEffects.newEffect(i, j*2, flairColors[rint(flairColors.length)]);
+
 	
-	function draw() {
-		personDeathEffects.process();
-		requestAnimationFrame(draw);
-	}draw();
-}</script></body></html>
+	// function draw() {
+	// 	personDeathEffects.process();
+	// 	requestAnimationFrame(draw);
+	// }draw();
+</script></body></html>
