@@ -11,14 +11,15 @@ C = (D=document).body.appendChild(W=D.createElement("canvas")).getContext("2d");
 		return Math.random() * (end - start) + start;
 	}
 
-	C.scale(32, 32);
+	// C.scale(32, 32);
 	C.fillStyle = '#0f0';
 	C.fillRect(0,0,1,1);
 	C.fillRect(0,2,20,1);
 	C.fillStyle = '#00F';
 	C.fillRect(0,1,1,1);
 
-	function head(x, shouldy, bodyHeight, headWidth, headHeight, headGap, headColor, flairColor, shadesType) {
+
+	function head(C, x, shouldy, bodyHeight, headWidth, headHeight, headGap, headColor, flairColor, shadesType) {
 		C.fillStyle = headColor;
 		C.shadowColor = flairColor;
 		C.shadowBlur = 20;
@@ -43,7 +44,7 @@ C = (D=document).body.appendChild(W=D.createElement("canvas")).getContext("2d");
 		}
 	}
 
-	function bodyPill(x, hipy, shouldy, bodywidth, bodyHeight, shirtColor, flairColor, clothesType) {
+	function bodyPill(C, x, hipy, shouldy, bodyWidth, bodyHeight, shirtColor, flairColor, clothesType) {
 		C.shadowColor = flairColor;
 		C.shadowBlur = 20;
 		C.strokeStyle = shirtColor;
@@ -125,30 +126,73 @@ C = (D=document).body.appendChild(W=D.createElement("canvas")).getContext("2d");
 		'#DFB997'
 	]
 
-	for(var i = 1; i < 10; i++) {
-		var shirtColor = shirtColors[rint(shirtColors.length)];
-		var headColor = skinTones[rint(skinTones.length)];
-		var flairColor = flairColors[rint(flairColors.length)];
-		var clothesType = rint(4);
-		var shadesType = rint(3);
+	function makePeople(n) {
+		people = [];
+		for(var i = 1; i < n; i++) {
+			var headCvs, bodyCvs;
+			var headCtx = document.body.appendChild(headCvs=D.createElement("canvas")).getContext("2d");
+			var bodyCtx = document.body.appendChild(bodyCvs=D.createElement("canvas")).getContext("2d");
+			headCtx.scale(32, 32);
+			bodyCtx.scale(32, 32);
+			var shirtColor = shirtColors[rint(shirtColors.length)];
+			var headColor = skinTones[rint(skinTones.length)];
+			var flairColor = flairColors[rint(flairColors.length)];
+			var clothesType = rint(4);
+			var shadesType = rint(3);
 
-		var x = i;
-		var y = 1;
-		var bodyHeight = rangeVar(0.35, 0.44);
+			var x = 1;
+			var y = 1;
+			var bodyHeight = rangeVar(0.35, 0.44);
 
-		var hipy = y+0.1;
-		var shouldy = hipy - bodyHeight;
-		var bodyWidth = rangeVar(0.81, 0.7);
-		
-		var headRadius = rangeVar(0.67, 0.70);
-		var headWidth = headRadius;
-		var headHeight = headRadius;
-		var headGap = -0.05;
-	
-		bodyPill(x, hipy, shouldy, bodyWidth, bodyHeight, shirtColor, flairColor, clothesType);
-		head(x+(1-headWidth)/2,shouldy, bodyHeight, headWidth, headHeight, headGap, headColor, flairColor, shadesType);
+			var hipy = y+0.1;
+			var shouldy = hipy - bodyHeight;
+			var bodyWidth = rangeVar(0.81, 0.7);
+			
+			var headRadius = rangeVar(0.67, 0.70);
+			var headWidth = headRadius;
+			var headHeight = headRadius;
+			var headGap = -0.05;
+
+			bodyPill(bodyCtx, x, hipy, shouldy, bodyWidth, bodyHeight, shirtColor, flairColor, clothesType);
+			head(headCtx, x+(1-headWidth)/2,shouldy, bodyHeight, headWidth, headHeight, headGap, headColor, flairColor, shadesType);
+			people.push({headCvs : headCvs, bodyCvs : bodyCvs});
+			document.body.removeChild(headCvs);
+			document.body.removeChild(bodyCvs);
+		}
+	}
+	makePeople(30);
+
+	function lerp(v0, v1, t) {
+		return (1-t)*v0 + t*v1;
 	}
 
+	function smootherstep(x)
+	{
+		return x*x*x*(x*(x*6 - 15) + 10);
+	}
+
+	function drawPerson(x, y, i, t) {
+		t = Math.sin(t*0.2);
+		var hdx = 1+((i%5)/5-0.5);
+		var hdy = 1+((i%7)/7-0.5);
+	
+		var hx = lerp(-hdx, hdx, t);
+		var hy = lerp(-hdy, hdy, t);
+		var hy2 = lerp(-1, 1, t);
+		// console.log(t, hx, hy);
+		C.drawImage(people[i].bodyCvs, x, y+hy2);
+		C.drawImage(people[i].headCvs, x+hx, y+hy);
+	}
+
+	var frame = 0;
+	function draw() {
+		C.clearRect(0,0,ww,wh);
+		for(var i = 0; i < people.length; i++) {
+			drawPerson(i*32, 2, i, frame);
+		}
+		frame++;
+		requestAnimationFrame(draw);
+	}draw();
 
 
 }</script></body></html>t
