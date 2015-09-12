@@ -66,7 +66,7 @@ peopleSprites = {
 				C.fillRect(x, shouldy-bodyHeight-headGap+0.2, headWidth, 0.07);
 				C.fillRect(x, shouldy-bodyHeight-headGap+0.3, headWidth, 0.07);
 				break;
-			
+
 		}
 	},
 	bodyPill : function(C, x, hipy, shouldy, bodyWidth, bodyHeight, shirtColor, flairColor, clothesType) {
@@ -74,7 +74,7 @@ peopleSprites = {
 		C.shadowBlur = 8;
 		C.strokeStyle = shirtColor;
 		C.lineWidth = bodyWidth;
-	
+
 		C.beginPath();
 		C.moveTo(x+0.5, hipy+0.9);
 		C.lineTo(x+0.5, shouldy+0.5);
@@ -120,7 +120,7 @@ peopleSprites = {
 				break;
 			default:
 				console.err("No clothesType! " + clothesType);
-				
+
 		}
 	},
 	sprites : [],
@@ -144,7 +144,7 @@ peopleSprites = {
 		var hipy = y+0.1;
 		var shouldy = hipy - bodyHeight;
 		var bodyWidth = rangeVar(0.81, 0.7);
-		
+
 		var headRadius = rangeVar(0.67, 0.70);
 		var headWidth = headRadius;
 		var headHeight = headRadius;
@@ -164,7 +164,7 @@ peopleSprites = {
 		t = Math.sin(t/60); //TODO make this match your timing
 		var hdx = 1+((i%5)/5-0.5);
 		var hdy = 1+((i%7)/7-0.5);
-	
+
 		var hx = lerp(-hdx, hdx, t);
 		var hy = lerp(-hdy, hdy, t);
 		var hy2 = lerp(-1, 1, t);
@@ -175,9 +175,8 @@ peopleSprites = {
 	clear : function() {
 		this.C.clearRect(0,0,ww,wh);
 	}
-
 };
-	
+
 
 // var frame = 0;
 // function draw() {
@@ -185,7 +184,7 @@ peopleSprites = {
 // 	for(var i = 0; i < 30; i++) {
 // 		peopleSprites.drawPerson(i*32, 0, i, frame);
 // 	}
-	
+
 // 	frame++;
 // 	requestAnimationFrame(draw);
 // }draw();

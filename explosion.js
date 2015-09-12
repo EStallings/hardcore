@@ -1,9 +1,6 @@
-	var resizableCanvases = [];
-	ww = innerWidth;
-	wh = innerHeight;
 	function rint(n) { return Math.floor(Math.random()*n); }
 	function rand(n) { return Math.random()*n; }
-	
+
 	function lerp(v0, v1, t) {
 		return (1-t)*v0 + t*v1;
 	}
@@ -27,7 +24,7 @@
 		C : document.body.appendChild(tmp).getContext("2d"),
 		cx : 2,
 		cy : 2,
-		rad : 1.2,
+		rad : 100.2,
 		finished : true,
 		rayColors : [],
 		rawColors : [
@@ -37,7 +34,7 @@
 		],
 		rays : [],
 		explode : function(x, y) {
-			
+
 			this.cx = x;
 			this.cy = y;
 			this.rays = [];
@@ -101,13 +98,11 @@
 			}
 		}
 	}
-	explosion.W.width = ww;explosion.W.height = wh;
-	resizableCanvases.push(explosion.W);
-	explosion.C.scale(128, 128);
-	
+
+
 	// explosion.explode(2, 2);
 	// function draw() {
 	// 	explosion.draw();
 	// 	requestAnimationFrame(draw);
 	// }draw();
-	// 
+	//

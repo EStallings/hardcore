@@ -1,6 +1,7 @@
 with((D=document).body.appendChild(W=D.createElement("canvas")).getContext("2d"))with(Math){
-var resizeableCanvases = [W,peopleSprites.W];(onresize=e=>resizeableCanvases.map(c=>{c.width=ww=innerWidth;c.height=wh=innerHeight;}))();
-
+var resizeableCanvases = [W, peopleSprites.W, explosion.W];
+(onresize=e=>resizeableCanvases.map(c=>{c.width=ww=innerWidth;c.height=wh=innerHeight;}))();
+explosion.C.scale(128, 128);
 //==  USER DEFINABLES  =======================================================//
 
 var updateInterval    = 1000;
@@ -15,8 +16,9 @@ var renderScale = 40;
 
 var clamp = (i,n,x) => min(max(i,n),x);
 
-var rgb = (r,g,b,a) => fillStyle=strokeStyle=shadowColor=`rgba(${~~(255*r)},${~~(255*g)},${~~(255*b)},${a===0?0:a||1})`;
-var pushPop = f => { save(); f(); restore(); };
+//var rgb = (r,g,b,a) => fillStyle=strokeStyle=shadowColor=`rgba(${~~(255*r)},${~~(255*g)},${~~(255*b)},${a===0?0:a||1})`;
+var rgb = (r,g,b,a) => fillStyle=strokeStyle=shadowColor="rgba("+~~(255*r)+","+~~(255*g)+","+~~(255*b)+","+(a===0?0:a||1)+")";
+var pushPop = f => { resizeableCanvases.map(i=>i.getContext('2d').save()); f(); resizeableCanvases.map(i=>i.getContext('2d').restore()); };
 var fillCircle = (x,y,r) => { beginPath(); arc(x,y,r,0,2*PI); fill(); };
 
 var id =_=>0;
@@ -132,12 +134,16 @@ onmouseup =_=> animating = true;
 var tick=performance.now(),prevTick=tick;
 (loop = _ => pushPop(_=>{animating && requestAnimationFrame(loop);prevTick=tick;tick=performance.now();clearRect(0,0,ww,wh);peopleSprites.clear();
 
-	translate(ww/2,wh/2);
+	resizeableCanvases.map(i=>i.getContext('2d').translate(ww/2,wh/2));
 
 	pushPop(_=>{
-		scale(renderScale,renderScale);
-		translate(-gw/2,-gh/2);
-		translate(0.5,0.5);
+//		resizeableCanvases.map(i=>i.getContext('2d').scale(renderScale,renderScale));
+		resizeableCanvases.map(i=>i.getContext('2d').translate(-renderScale*gw/2,-renderScale*gh/2));
+		// resizeableCanvases.map(i=>i.getContext('2d').translate(0.5,0.5));
+
+		// scale(renderScale,renderScale);
+		// translate(-gw/2,-gh/2);
+		// translate(0.5,0.5);
 
 		rgb(0,0,0,0.3);
 
@@ -146,6 +152,7 @@ var tick=performance.now(),prevTick=tick;
 
 		var progress = clamp((tick-updateTick)/animationInterval,0,1);
 		var invP = 1-progress;
+		explosion.draw();
 		throng.sort((a,b)=>a.y-b.y);
 		throng.map(i=>actionSwitch(i.activeAction,
 			_=>peopleSprites.drawPerson(i.x,i.y,i.spriteId,tick),
@@ -168,6 +175,7 @@ var tick=performance.now(),prevTick=tick;
 		var deads = [];
 		throng.map(i=>{
 			if (i.activeAction!==BOMB) return;
+			explosion.explode(i.x,i.y);
 			var x = i.x, y = i.y;
 			var adjacentCells = grid[x][y];
 			if(x>0)adjacentCells=adjacentCells.concat(grid[x-1][y]);
