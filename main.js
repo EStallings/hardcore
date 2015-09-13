@@ -155,6 +155,7 @@ var gameKeyListener = e => {
 		gameOver = false;
 		initialize();
 		scrubs.map(i=>i.reassign());
+		scrubs.map(i=>i.points=0);
 	}
 };
 

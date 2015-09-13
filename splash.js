@@ -11,11 +11,33 @@ var splash = (_=>{
 	img.src = "pureSex.png";
 	var cont = new Image();
 	cont.src = "continue.png";
+	var p1win = new Image();p1win.src="p1win.png";
+	var p2win = new Image();p2win.src="p2win.png";
+	var p3win = new Image();p3win.src="p3win.png";
+	var p4win = new Image();p4win.src="p4win.png";
 	
 	return {
 		isActive:_=>gg!==0,
 		render:gfx=>{
 			g += (gg-g)*0.2;
+			if(gameOver){
+				var p=0,v=-100;
+				scrubs.map((i,n)=>{
+					if(i.points>v){
+						p=n;
+						v=i.points;
+					}
+				});
+				rgb(0.9,0.9,0.9);
+				gfx.shadowBlur = 10;
+				gfx.fillRect(ww/2-200,wh/2-100,400,200);
+				switch(p){
+					case 0:gfx.drawImage(p1win,ww/2-200,wh/2-100);break;
+					case 1:gfx.drawImage(p2win,ww/2-200,wh/2-100);break;
+					case 2:gfx.drawImage(p3win,ww/2-200,wh/2-100);break;
+					case 3:gfx.drawImage(p4win,ww/2-200,wh/2-100);break;
+				}
+			}
 			if(g<0.01)return;
 			gy = wh/2;
 			y += (gy-y)*0.02;
