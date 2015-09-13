@@ -62,11 +62,11 @@ introKeyListener = e => {
 		if (state < 7) {state++;return;}
 		if (state === 17) {init = false; return;}
 		if (state === 22) {init = false; return;}
-		if (state === 27) {init = false; return;}
+		if (state > 26) {init = false; return;}
 		return; //Cannot bind enter to anything else.
 	}
 	if(e.keyCode === 32 && scrubs.length == 0) {
-		state = 27;
+		state = 30;
 		var P1 = new player(87, 83, 65, 68, 81);
 		var P2 = new player(73, 75, 74, 76, 85);
 	}
