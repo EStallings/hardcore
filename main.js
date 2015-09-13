@@ -22,11 +22,7 @@ var clamp = (i,n,x) => min(max(i,n),x);
 var rgb = (r,g,b,a) => fillStyle=strokeStyle=shadowColor="rgba("+~~(255*r)+","+~~(255*g)+","+~~(255*b)+","+(a===0?0:a||1)+")";
 var pushPop = f => { resizeableCtxs.map(i=>i.save()); f(); resizeableCtxs.map(i=>i.restore()); };
 var fillCircle = (x,y,r) => { beginPath(); arc(x,y,r,0,2*PI); fill(); };
-var image = src => {
-	var retval = new Image();
-	retval.src = src;
-	return retval;
-}
+
 
 var id =_=>0;
 
@@ -101,7 +97,7 @@ var player = function(ctlU,ctlD,ctlL,ctlR,ctlB) {
 	this.ctlL = ctlL;
 	this.ctlR = ctlR;
 	this.ctlB = ctlB;
-
+	console.log(this);
 	(this.reassign =_=>{
 		throng.sort((a,b)=>{
 			if (a.player && b.player) return 0;

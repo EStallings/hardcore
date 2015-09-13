@@ -18,7 +18,7 @@ var drawBkg =_=>{ with(bkg) pushPop(_=>{
   translate(-0.25,-0.15);
   translate(-gw/2,-gh/2);
 
-  shadowBlur = 10;
+  shadowBlur = 0;
   for(var i=0;i<gw;++i)for(var j=0;j<gh;++j){
     var x = i+0.5-gw/2;
     var y = j+0.5-gh/2;

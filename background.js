@@ -36,7 +36,7 @@ backgroundEffects = {
 
 		//DJ Booth:
 		this.C.shadowColor = '#ff69b4';
-		this.C.shadowBlur = 40;
+		this.C.shadowBlur = 0;
 		this.C.fillStyle = '#a0a0a0';
 		this.C.fillRect(x-16, y+55, 128, 40);
 		this.C.fillStyle = '#898989';
@@ -77,7 +77,7 @@ backgroundEffects = {
 		this.C.fillStyle = '#898989';
 		this.C.fillRect(32, -90, 80, 110);
 		this.C.fillRect(gw*32-80+32, -90, 80, 110);
-	
+
 		this.C.fillRect(-160, -90, 160, gh*32+160-32);
 		this.C.fillRect(gw*32+64, -90, 160, gh*32+160-32);
 
@@ -98,7 +98,7 @@ backgroundEffects = {
 			that.circle(x-40, y+50, 24+1.5*sint);
 			that.circle(x+40, y+50, 24+1.5*sint);
 			that.circle(x, y+130, 50+3*sint);
-			
+
 		}
 		pattern1(this, -80, 0);
 		pattern1(this, -80, gh*32/2);
@@ -114,7 +114,7 @@ backgroundEffects = {
 		this.C.fillRect(gw*32+64, -160+gh*32/2, 160, 70);
 
 		this.C.fillStyle='#fff';
-		
+
 	}
-	
+
 }
