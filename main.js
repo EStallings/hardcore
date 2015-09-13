@@ -211,7 +211,6 @@ loop = _ => pushPop(_=>{animating && requestAnimationFrame(loop);
 			});
 			deads.map(i=>i.reassign());
 			throng.map((e,i)=>{if(!e.player)e.ai(e)});
-			// console.log("P1: "+P1.points+" | P2: "+P2.points);
 		}
 
 		if(init) {
