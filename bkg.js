@@ -40,10 +40,7 @@ var drawBkg =_=>{ with(bkg) pushPop(_=>{
 	font = 'Italic 35px Impact';
 	fillStyle = "#FFF";
 	var boxwidth = 220;
-	var negWidth = measureText('-').width;
-	var numWidth = measureText('0').width;
 	scrubs.map((i, id)=>{
-		// if(Math.abs(i.points) < 10) extraWidth += numWidth;
-		fillText("PLAYER " + (id+1) + " : " + ((i.points >= 0) ?  '+' : '') + ((Math.abs(i.points) < 10) ?  '0' : '') + i.points, ((id-scrubs.length/2)*(boxwidth)) + gw*16 + 10, gh*32+64);
+		fillText("PLAYER " + (id+1) + " : " + ((i.points < 0) ? "-" : "+") + "" + ("00"+Math.abs(i.points)).slice(-2), ((id-scrubs.length/2)*(boxwidth)) + gw*16 + 10, gh*32+64);
 	});
 })}
