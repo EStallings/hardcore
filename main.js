@@ -1,6 +1,6 @@
 with((D=document).body.appendChild(W=D.createElement("canvas")).getContext("2d"))with(Math){
-var audio = new Audio('perturbator.mp3');
-var BPM = 132;
+var audio = new Audio('invasion.mp3');
+var BPM = 90;
 audio.play();
 audio.loop = true;
 audio.volume = 0.4;
@@ -12,7 +12,7 @@ var resizeableCtxs = resizeableCanvases.map(i=>i.getContext('2d'));
 
 //==  USER DEFINABLES  =======================================================//
 
-var updateInterval    = (60000/BPM)*2;
+var updateInterval    = (60000/BPM);
 var animationInterval = updateInterval/2;
 
 var gw = 10;
