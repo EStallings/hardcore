@@ -1,4 +1,7 @@
 with((D=document).body.appendChild(W=D.createElement("canvas")).getContext("2d"))with(Math){
+var audio = new Audio('perturbator.mp3');
+audio.play();
+audio.loop = true;
 explosion.init();
 backgroundEffects.init();
 var resizeableCanvases = [BKG, W, peopleSprites.W, explosion.W, personDeathEffects.W, backgroundEffects.W];
