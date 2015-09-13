@@ -31,7 +31,7 @@ var id =_=>0;
 animationInterval = min(updateInterval,animationInterval);
 var updateTick = performance.now();
 var animating = true;
-var init = false;
+var init = true;
 
 var NONE  = 0;
 var NORTH = 1;
@@ -213,8 +213,8 @@ var tick=performance.now(),prevTick=tick;
 	if(init) {
 		showIntro();
 		onkeydown = introKeyListener;
-	} 
-	else 
+	}
+	else
 		onkeydown = gameKeyListener;
 }))();
 
