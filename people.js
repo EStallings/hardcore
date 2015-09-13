@@ -1,22 +1,6 @@
 
-function rint(n) { return Math.floor(Math.random()*n); }
-function easeOutExpo(x) {
-	return -Math.pow( 2, -10 * x ) + 1;
-}
 var outlineWidth = 0.02;
 
-function rangeVar(start, end) {
-	return Math.random() * (end - start) + start;
-}
-
-function lerp(v0, v1, t) {
-	return (1-t)*v0 + t*v1;
-}
-
-function smootherstep(x)
-{
-	return x*x*x*(x*(x*6 - 15) + 10);
-}
 
 var tmp = null;
 peopleSprites = {
@@ -45,7 +29,7 @@ peopleSprites = {
 		'#BE723C',
 		'#DFB997'
 	],
-	head : function(C, x, shouldy, bodyHeight, headWidth, headHeight, headGap, headColor, flairColor, shadesType) {
+	head : function(C, x, shouldy, bodyHeight, headWidth, headHeight, headGap, headColor, flairColor, shadesType, hairColor, hairType) {
 		C.fillStyle = headColor;
 		C.shadowColor = flairColor;
 		C.shadowBlur = 8;
@@ -66,7 +50,44 @@ peopleSprites = {
 				C.fillRect(x, shouldy-bodyHeight-headGap+0.2, headWidth, 0.07);
 				C.fillRect(x, shouldy-bodyHeight-headGap+0.3, headWidth, 0.07);
 				break;
+			case 'DJ':
+			
+				C.fillStyle = flairColor;
+				C.shadowColor = '#fff';
+				C.fillRect(x, shouldy-bodyHeight-headGap+0.25, headWidth, 0.07);
+				C.beginPath();
+				C.moveTo(x-0.1, shouldy-bodyHeight-headGap+0.2);
+				C.lineTo(x+0.3, shouldy-bodyHeight-headGap+0.2);
+				C.lineTo(x+0.15, shouldy-bodyHeight-headGap+0.45);
+				C.lineTo(x-0.1, shouldy-bodyHeight-headGap+0.2);
+				C.fill();
+				C.closePath();
+				
+				C.beginPath();
+				C.moveTo(x+headWidth+0.1, shouldy-bodyHeight-headGap+0.2);
+				C.lineTo(x+headWidth-0.3, shouldy-bodyHeight-headGap+0.2);
+				C.lineTo(x+headWidth-0.15, shouldy-bodyHeight-headGap+0.45);
+				C.lineTo(x+headWidth+0.1, shouldy-bodyHeight-headGap+0.2);
+				C.fill();
+				C.closePath();
+				
+				break;
+			default:
+				break;
 
+		}
+
+		switch(hairType) {
+			case 0: //Mohawk
+				break;
+			case 1: //SquareTop
+				break;
+			case 2: //Front-do
+				break;
+			case 3: //Bald
+				break;
+			case 'DJ': //DJ
+				break;
 		}
 	},
 	bodyPill : function(C, x, hipy, shouldy, bodyWidth, bodyHeight, shirtColor, flairColor, clothesType) {
@@ -118,49 +139,89 @@ peopleSprites = {
 				C.fillRect(x+0.6, shouldy+0.65, 0.1, 0.1);
 				C.fillRect(x+0.6, shouldy+0.85, 0.1, 0.1);
 				break;
+			case 'DJ':
+				C.fillRect(x+0.65, shouldy+0.6, 0.15, 0.1);
+				C.fillRect(x+0.65, shouldy+0.8, 0.15, 0.1);
+				C.fillRect(x+0.65, shouldy+1, 0.15, 0.1);
+				C.fillRect(x+0.71, shouldy+0.6, 0.05, 0.2);
+				C.fillRect(x+0.71, shouldy+0.9, 0.05, 0.2);
+
+				C.fillRect(x+0.2, shouldy+0.6, 0.15, 0.1);
+				C.fillRect(x+0.2, shouldy+0.8, 0.15, 0.1);
+				C.fillRect(x+0.2, shouldy+1, 0.15, 0.1);
+				C.fillRect(x+0.25, shouldy+0.6, 0.05, 0.2);
+				C.fillRect(x+0.25, shouldy+0.9, 0.05, 0.2);
+				C.fillRect(x+0.47, shouldy+0.6, 0.05, 0.5);
+				break;
 			default:
 				console.err("No clothesType! " + clothesType);
 
 		}
 	},
 	sprites : [],
-	makePerson : function() {
+	makePerson : function(DJ, flairOverride) {
 		var headCvs, bodyCvs;
 		var headCtx = document.body.appendChild(headCvs=document.createElement("canvas")).getContext("2d");
 		var bodyCtx = document.body.appendChild(bodyCvs=document.createElement("canvas")).getContext("2d");
-		bodyCvs.width = bodyCvs.height = headCvs.width = headCvs.height = 64;
+		bodyCvs.width = headCvs.width = 64;
+		bodyCvs.height = headCvs.height = 128;
 		headCtx.scale(32, 32);
 		bodyCtx.scale(32, 32);
-		var shirtColor = this.shirtColors[rint(this.shirtColors.length)];
 		var headColor = this.skinTones[rint(this.skinTones.length)];
-		var flairColor = this.flairColors[rint(this.flairColors.length)];
-		var clothesType = rint(4);
-		var shadesType = rint(3);
+		var shirtColor = this.shirtColors[rint(this.shirtColors.length)];
+		if(DJ) {
+			// var shirtColor = '#ff69b4';
+			var flairColor = flairOverride;
+			var clothesType = 'DJ';
+			var shadesType = 'DJ';
+			
+			var x = 1;
+			var y = 1;
+			var bodyHeight = 0.44;
+			
+			var hipy = y+0.1;
+			var shouldy = hipy - bodyHeight;
+			var bodyWidth = 0.81;
+			
+			var headRadius = 0.68;
+		}else {
+			var flairColor = this.flairColors[rint(this.flairColors.length)];
+			var clothesType = rint(4);
+			var shadesType = rint(3);
+			
+			var x = 1;
+			var y = 1;
+			var bodyHeight = rangeVar(0.35, 0.44);
+			
+			var hipy = y+0.1;
+			var shouldy = hipy - bodyHeight;
+			var bodyWidth = rangeVar(0.81, 0.7);
+			
+			var headRadius = rangeVar(0.67, 0.70);
+		}
 
-		var x = 1;
-		var y = 1;
-		var bodyHeight = rangeVar(0.35, 0.44);
-
-		var hipy = y+0.1;
-		var shouldy = hipy - bodyHeight;
-		var bodyWidth = rangeVar(0.81, 0.7);
-
-		var headRadius = rangeVar(0.67, 0.70);
 		var headWidth = headRadius;
 		var headHeight = headRadius;
 		var headGap = -0.05;
 
 		this.bodyPill(bodyCtx, x, hipy, shouldy, bodyWidth, bodyHeight, shirtColor, flairColor, clothesType);
 		this.head(headCtx, x+(1-headWidth)/2,shouldy, bodyHeight, headWidth, headHeight, headGap, headColor, flairColor, shadesType);
-		this.sprites.push({headCvs : headCvs, bodyCvs : bodyCvs, flairColor : flairColor});
+		
 		document.body.removeChild(headCvs);
 		document.body.removeChild(bodyCvs);
-		return this.sprites.length-1;
+
+		if(DJ) {
+			return {headCvs : headCvs, bodyCvs : bodyCvs, flairColor : flairColor};
+		}
+		else {
+			this.sprites.push({headCvs : headCvs, bodyCvs : bodyCvs, flairColor : flairColor});	
+			return this.sprites.length-1;
+		}
 	},
 	drawPerson : function(x, y, i, t) {
 		x*=32;
 		y*=32;
-		t = Math.sin(t/60); //TODO make this match your timing
+		t = Math.sin(t/60);
 		var hdx = 1+((i%5)/5-0.5);
 		var hdy = 1+((i%7)/7-0.5);
 
@@ -175,15 +236,3 @@ peopleSprites = {
 		this.C.clearRect(0,0,ww,wh);
 	}
 };
-
-
-// var frame = 0;
-// function draw() {
-// 	peopleSprites.clear();
-// 	for(var i = 0; i < 30; i++) {
-// 		peopleSprites.drawPerson(i*32, 0, i, frame);
-// 	}
-
-// 	frame++;
-// 	requestAnimationFrame(draw);
-// }draw();
