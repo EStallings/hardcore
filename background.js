@@ -25,7 +25,11 @@ backgroundEffects = {
 	},
 	init : function() {
 		this.flairColor = this.colors[rint(this.colors.length)];
-		this.logos[0] = { img: this.loadImage('extralogo1.png', this.flairColor), w:250, h:250, ox:0, oy:0};
+		this.logos.push({ img: this.loadImage('extralogo1.png', this.flairColor), w:180, h:180, ox:0, oy:0});
+		this.logos.push({ img: this.loadImage('extralogo2.png', this.flairColor), w:150, h:150, ox:0, oy:0});
+		this.logos.push({ img: this.loadImage('extralogo3.png', this.flairColor), w:200, h:200, ox:0, oy:0});
+		this.logos.push({ img: this.loadImage('extralogo4.png', this.flairColor), w:150, h:150, ox:0, oy:20});
+		this.logos.push({ img: this.loadImage('extralogo5.png', this.flairColor), w:150, h:150, ox:0, oy:20});
 		this.logo = this.logos[rint(this.logos.length)];
 		this.dj = peopleSprites.makePerson(true, this.flairColor);
 	},
@@ -131,6 +135,9 @@ backgroundEffects = {
 		this.C.fillStyle = '#222';
 		this.C.fillRect(-160, -160+gh*32/2, 160, 70);
 		this.C.fillRect(gw*32+64, -160+gh*32/2, 160, 70);
+
+		var decorText1 = '罗我思故我在非常的事情本身我这样做阿梅德';
+		var decorText2 = '보라나는그것이내가바로그일자체입니다때문에생각하는가';
 	}
 
 }

@@ -60,5 +60,5 @@ var drawBkg =_=>{ with(bkg) pushPop(_=>{
 	shadowBlur = 10;
 	fillText("TEAM POWERFLOWER", gw*32/2-ox-32+offset1, gh*32+250);
 	shadowBlur = 0;
-	fillText("Game", gw*32/2-ox-32+offset2, gh*32+250);
+	fillText("GAME", gw*32/2-ox-32+offset2, gh*32+250);
 })}
