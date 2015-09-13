@@ -11,8 +11,8 @@ var resizeableCtxs = resizeableCanvases.map(i=>i.getContext('2d'));
 
 //==  USER DEFINABLES  =======================================================//
 
-var updateInterval    = 1000;
-var animationInterval = 500;
+var updateInterval    = (60000/BPM)*2;
+var animationInterval = updateInterval/2;
 
 var gw = 10;
 var gh = 10;
