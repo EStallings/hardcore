@@ -15,28 +15,30 @@ var splash = (_=>{
 	var p2win = new Image();p2win.src="p2win.png";
 	var p3win = new Image();p3win.src="p3win.png";
 	var p4win = new Image();p4win.src="p4win.png";
+	var tie   = new Image();  tie.src="tie.png";
 	
 	return {
 		isActive:_=>gg!==0,
 		render:gfx=>{
 			g += (gg-g)*0.2;
 			if(gameOver){
-				var p=0,v=-100;
+				var p=0,v=-100,tied = false;
 				scrubs.map((i,n)=>{
 					if(i.points>v){
+						tied=false;
 						p=n;
 						v=i.points;
-					}
+					}else if(i.points==v)tied=true;
 				});
 				rgb(0.9,0.9,0.9);
 				gfx.shadowBlur = 10;
 				gfx.fillRect(ww/2-200,wh/2-100,400,200);
-				switch(p){
+				if(!tied)switch(p){
 					case 0:gfx.drawImage(p1win,ww/2-200,wh/2-100);break;
 					case 1:gfx.drawImage(p2win,ww/2-200,wh/2-100);break;
 					case 2:gfx.drawImage(p3win,ww/2-200,wh/2-100);break;
 					case 3:gfx.drawImage(p4win,ww/2-200,wh/2-100);break;
-				}
+				}else gfx.drawImage(tie,ww/2-200,wh/2-100);
 			}
 			if(g<0.01)return;
 			gy = wh/2;
