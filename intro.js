@@ -4,7 +4,7 @@ var image = src => {
 	var retval = new Image();
 	retval.src = src;
 	return retval;
-}
+};
 
 var tut1 = image('tut1.png');
 var tut2 = image('tut2.png');
@@ -46,6 +46,24 @@ var showIntro = _ => {
 	}
 };
 
+var playerCtls = function(ctlU, ctlD, ctlL, ctlR, ctlB) {
+	this.ctlU = ctlU;
+	this.ctlD = ctlD;
+	this.ctlL = ctlL;
+	this.ctlR = ctlR;
+	this.ctlB = ctlB;
+};
+
+var P1Ctls;
+var P2Ctls;
+var P3Ctls;
+var P4Ctls;
+
+var P1;
+var P2;
+var P3;
+var P4;
+
 var ctlU;
 var ctlD;
 var ctlL;
@@ -60,15 +78,32 @@ introKeyListener = e => {
 	}
 	if (e.keyCode === 13) {
 		if (state < 7) {state++;return;}
-		if (state === 17) {init = false; return;}
-		if (state === 22) {init = false; return;}
-		if (state > 26) {init = false; return;}
+
+		if (state === 17) {
+			P1 = new player(P1Ctls.ctlU, P1Ctls.ctlD, P1Ctls.ctlL, P1Ctls.ctlR, P1Ctls.ctlB);
+			P2 = new player(P2Ctls.ctlU, P2Ctls.ctlD, P2Ctls.ctlL, P2Ctls.ctlR, P2Ctls.ctlB);
+			init = false; return;
+		}
+		if (state === 22) {
+			P1 = new player(P1Ctls.ctlU, P1Ctls.ctlD, P1Ctls.ctlL, P1Ctls.ctlR, P1Ctls.ctlB);
+			P2 = new player(P2Ctls.ctlU, P2Ctls.ctlD, P2Ctls.ctlL, P2Ctls.ctlR, P2Ctls.ctlB);
+			P3 = new player(P3Ctls.ctlU, P3Ctls.ctlD, P3Ctls.ctlL, P3Ctls.ctlR, P3Ctls.ctlB);
+			init = false; return;
+		}
+		if (state === 27) {
+			P1 = new player(P1Ctls.ctlU, P1Ctls.ctlD, P1Ctls.ctlL, P1Ctls.ctlR, P1Ctls.ctlB);
+			P2 = new player(P2Ctls.ctlU, P2Ctls.ctlD, P2Ctls.ctlL, P2Ctls.ctlR, P2Ctls.ctlB);
+			P3 = new player(P3Ctls.ctlU, P3Ctls.ctlD, P3Ctls.ctlL, P3Ctls.ctlR, P3Ctls.ctlB);
+			P4 = new player(P4Ctls.ctlU, P4Ctls.ctlD, P4Ctls.ctlL, P4Ctls.ctlR, P4Ctls.ctlB);
+
+			init = false; return;
+		}
 		return; //Cannot bind enter to anything else.
 	}
-	if(e.keyCode === 32 && scrubs.length == 0) {
-		state = 30;
-		var P1 = new player(87, 83, 65, 68, 81);
-		var P2 = new player(73, 75, 74, 76, 85);
+	if(e.keyCode === 32 && scrubs.length === 0) {
+		state = 27;
+		P1 = new player(87, 83, 65, 68, 81);
+		P2 = new player(73, 75, 74, 76, 85);
 	}
 	if(boundKeys[e.keyCode]) return;
 	if(state >= 7) boundKeys[e.keyCode] = true;
@@ -79,7 +114,7 @@ introKeyListener = e => {
 	if (state === 10) {ctlR = e.keyCode;state++;return;}
 	if (state === 11) {
 		ctlB = e.keyCode;state++;
-		var P1 = new player(ctlU, ctlD, ctlL, ctlR, ctlB);
+		P1Ctls = new playerCtls(ctlU, ctlD, ctlL, ctlR, ctlB);
 		return;
 	}
 
@@ -89,7 +124,7 @@ introKeyListener = e => {
 	if (state === 15) {ctlR = e.keyCode;state++;return;}
 	if (state === 16) {
 		ctlB = e.keyCode;state++;
-		var P2 = new player(ctlU, ctlD, ctlL, ctlR, ctlB);
+		P2Ctls = new playerCtls(ctlU, ctlD, ctlL, ctlR, ctlB);
 		return;
 	}
 
@@ -99,7 +134,7 @@ introKeyListener = e => {
 	if (state === 20) {ctlR = e.keyCode;state++;return;}
 	if (state === 21) {
 		ctlB = e.keyCode;state++;
-		var P3 = new player(ctlU, ctlD, ctlL, ctlR, ctlB);
+		P3Ctls = new playerCtls(ctlU, ctlD, ctlL, ctlR, ctlB);
 		return;
 	}
 
@@ -109,7 +144,7 @@ introKeyListener = e => {
 	if (state === 25) {ctlR = e.keyCode;state++;return;}
 	if (state === 26) {
 		ctlB = e.keyCode;state++;
-		var P4 = new player(ctlU, ctlD, ctlL, ctlR, ctlB);
+		P4Ctls = new playerCtls(ctlU, ctlD, ctlL, ctlR, ctlB);
 		return;
 	}
 };
