@@ -3,6 +3,7 @@ var audio = new Audio('perturbator.mp3');
 var BPM = 128;
 audio.play();
 audio.loop = true;
+audio.volume = 0.4;
 explosion.init();
 backgroundEffects.init();
 var resizeableCanvases = [BKG, W, peopleSprites.W, explosion.W, personDeathEffects.W, backgroundEffects.W];

@@ -36,6 +36,8 @@ var drawBkg =_=>{ with(bkg) pushPop(_=>{
 
 
 	scale(1/32, 1/32);
+
+
 	//Scores
 	font = 'Italic 35px Impact';
 	var boxwidth = 220;
@@ -48,5 +50,15 @@ var drawBkg =_=>{ with(bkg) pushPop(_=>{
 	});
 
 	fillStyle = '#FFF';
-	fillText("ESC to Mute", gw*32/2-56-32, gh*32+150);
+	fillText("ESC TO MUTE", gw*32/2-60-32, gh*32+180);
+
+	var offset1 = measureText("A ").width;
+	var offset2 = measureText("A TEAM POWERFLOWER ").width;
+	var ox = 170;
+	fillText("A", gw*32/2-ox-32, gh*32+250);
+	shadowColor = hue(tick*0.001);
+	shadowBlur = 10;
+	fillText("TEAM POWERFLOWER", gw*32/2-ox-32+offset1, gh*32+250);
+	shadowBlur = 0;
+	fillText("Game", gw*32/2-ox-32+offset2, gh*32+250);
 })}

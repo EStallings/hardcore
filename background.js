@@ -13,8 +13,20 @@ backgroundEffects = {
 	W : tmp=document.createElement("canvas"),
 	C : document.body.appendChild(tmp).getContext("2d"),
 	colors : ['#ff69b4', '#69ffb4', '#b469ff', '#b4ff69', '#69ffb4'],
+	logos : [],
+	loadImage : function(src, tint) {
+		var fg = new Image();
+		fg.src = src;
+		return fg;
+	},
+	drawImage : function(img, x, y, sx, sy) {
+		this.C.drawImage(img,x,y,sx,sy);
+
+	},
 	init : function() {
 		this.flairColor = this.colors[rint(this.colors.length)];
+		this.logos[0] = { img: this.loadImage('extralogo1.png', this.flairColor), w:250, h:250, ox:0, oy:0};
+		this.logo = this.logos[rint(this.logos.length)];
 		this.dj = peopleSprites.makePerson(true, this.flairColor);
 	},
 	circle : function(x, y, r) {
@@ -30,6 +42,12 @@ backgroundEffects = {
 		this.circle(x, y, r/3);
 	},
 	draw : function(t) {
+
+		this.C.shadowColor = this.flairColor;
+		this.C.shadowBlur = 20;
+		this.drawImage(this.logo.img, gw*32/2+32-(this.logo.w/2)+this.logo.ox, -150-(this.logo.h/2)+this.logo.oy, this.logo.w, this.logo.h);
+		this.C.shadowBlur = 0;
+
 		//DJ:
 		t = 4*t*(BPM/6000)/(Math.PI*2);
 		var x = gw/2*32-16;
