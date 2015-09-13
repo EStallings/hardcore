@@ -137,6 +137,10 @@ for (var i=0;i<20;++i) new person(~~(random()*gw),~~(random()*gh));
 // var P2 = new player(79,76,75,59,73);
 
 var gameKeyListener = e => {
+	if(e.keyCode === 27) {
+		audio.muted = !audio.muted;
+		return;
+	}
 	var k = e.keyCode;
 	scrubs.map(i=>{
 		if(k===i.ctlU)i.person.pendingAction = NORTH;
@@ -147,7 +151,6 @@ var gameKeyListener = e => {
 	});
 };
 
-onclick  =_=> audio.muted = !audio.muted;
 //==  MAIN LOOP  =============================================================//
 
 var tick=performance.now(),prevTick=tick;
