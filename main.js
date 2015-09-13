@@ -1,6 +1,6 @@
 with((D=document).body.appendChild(W=D.createElement("canvas")).getContext("2d"))with(Math){
 explosion.init();
-var resizeableCanvases = [W, peopleSprites.W, explosion.W, personDeathEffects.W];
+var resizeableCanvases = [BKG, W, peopleSprites.W, explosion.W, personDeathEffects.W];
 var resizeableCtxs = [];
 resizeableCanvases.map(i=>resizeableCtxs.push(i.getContext('2d')));
 (onresize=e=>resizeableCanvases.map(c=>{c.width=ww=innerWidth;c.height=wh=innerHeight;}))();
@@ -139,6 +139,8 @@ var tick=performance.now(),prevTick=tick;
 	prevTick=tick;tick=performance.now();
 	resizeableCtxs.map(i=>i.clearRect(0,0,ww,wh));
 	resizeableCtxs.map(i=>i.translate(ww/2,wh/2));
+
+	drawBkg();
 
 	pushPop(_=>{
 		resizeableCtxs.map(i=>i.translate(-renderScale*gw/2,-renderScale*gh/2));
