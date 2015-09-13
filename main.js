@@ -1,4 +1,9 @@
 with((D=document).body.appendChild(W=D.createElement("canvas")).getContext("2d"))with(Math){
+var audio = new Audio('invasion.mp3');
+var BPM = 90;
+audio.play();
+audio.loop = true;
+audio.volume = 0.4;
 explosion.init();
 backgroundEffects.init();
 var resizeableCanvases = [BKG, W, peopleSprites.W, explosion.W, personDeathEffects.W, backgroundEffects.W];
@@ -7,8 +12,8 @@ var resizeableCtxs = resizeableCanvases.map(i=>i.getContext('2d'));
 
 //==  USER DEFINABLES  =======================================================//
 
-var updateInterval    = 1000;
-var animationInterval = 500;
+var updateInterval    = (60000/BPM);
+var animationInterval = updateInterval/2;
 
 var gw = 10;
 var gh = 10;
@@ -22,11 +27,6 @@ var clamp = (i,n,x) => min(max(i,n),x);
 var rgb = (r,g,b,a) => fillStyle=strokeStyle=shadowColor="rgba("+~~(255*r)+","+~~(255*g)+","+~~(255*b)+","+(a===0?0:a||1)+")";
 var pushPop = f => { resizeableCtxs.map(i=>i.save()); f(); resizeableCtxs.map(i=>i.restore()); };
 var fillCircle = (x,y,r) => { beginPath(); arc(x,y,r,0,2*PI); fill(); };
-var image = src => {
-	var retval = new Image();
-	retval.src = src;
-	return retval;
-}
 
 var id =_=>0;
 
@@ -35,7 +35,7 @@ var id =_=>0;
 animationInterval = min(updateInterval,animationInterval);
 var updateTick = performance.now();
 var animating = true;
-var init = false;
+var init = true;
 
 var NONE  = 0;
 var NORTH = 1;
@@ -79,6 +79,7 @@ var AIs =[
 var person = function (x,y) {
 	throng.push(this);
 
+	this.dead = false;
 	this.x = x;
 	this.y = y;
 	this.pendingAction = NONE;
@@ -100,7 +101,6 @@ var person = function (x,y) {
 			_=>{++this.y;if(this.y>=gh){this.y=gh-1;this.activeAction=NONE}},
 			_=>{--this.x;if(this.x< 0 ){this.x=   0;this.activeAction=NONE}},
 			_=>{++this.x;if(this.x>=gw){this.x=gw-1;this.activeAction=NONE}});
-		grid[this.x][this.y].push(this);
 	})();
 }
 
@@ -113,7 +113,7 @@ var player = function(ctlU,ctlD,ctlL,ctlR,ctlB) {
 	this.ctlL = ctlL;
 	this.ctlR = ctlR;
 	this.ctlB = ctlB;
-
+	console.log(this);
 	(this.reassign =_=>{
 		throng.sort((a,b)=>{
 			if (a.player && b.player) return 0;
@@ -122,21 +122,28 @@ var player = function(ctlU,ctlD,ctlL,ctlR,ctlB) {
 		});
 
 		var first = throng[0];
-		if(!first.player){
+		if(first && !first.player){
 			first.player = this;
 			this.person = first;
-		} else animating = false;
+		} else gameOver = true;
 	})();
 }
 
 //==  TESTING  ===============================================================//
 
-for (var i=0;i<20;++i) new person(~~(random()*gw),~~(random()*gh));
+var initialize =_=> {
+	for (var i=0;i<20;++i) new person(~~(random()*gw),~~(random()*gh));
+};
 
-// var P1 = new player(87,83,65,68,81);
-// var P2 = new player(79,76,75,59,73);
+initialize();
+
+var gameOver = false;
 
 var gameKeyListener = e => {
+	if(e.keyCode === 27) {
+		audio.muted = !audio.muted;
+		return;
+	}
 	var k = e.keyCode;
 	scrubs.map(i=>{
 		if(k===i.ctlU)i.person.pendingAction = NORTH;
@@ -145,81 +152,91 @@ var gameKeyListener = e => {
 		if(k===i.ctlR)i.person.pendingAction = WEST;
 		if(k===i.ctlB)i.person.pendingAction = BOMB;
 	});
+	if (gameOver && e.keyCode === 32) {
+		gameOver = false;
+		initialize();
+		scrubs.map(i=>i.reassign());
+		scrubs.map(i=>i.points=0);
+	}
 };
-
-onmouseup =_=> animating = true;
 
 //==  MAIN LOOP  =============================================================//
 
 var tick=performance.now(),prevTick=tick;
-(loop = _ => pushPop(_=>{animating && requestAnimationFrame(loop);
+loop = _ => pushPop(_=>{requestAnimationFrame(loop);
 	prevTick=tick;tick=performance.now();
-	resizeableCtxs.map(i=>i.clearRect(0,0,ww,wh));
-	resizeableCtxs.map(i=>i.translate(ww/2,wh/2));
+	if(!splash.isActive()) pushPop(_=>{
+		resizeableCtxs.map(i=>i.clearRect(0,0,ww,wh));
+		resizeableCtxs.map(i=>i.translate(ww/2,wh/2));
 
-	drawBkg();
+		drawBkg();
 
-	pushPop(_=>{
-		resizeableCtxs.map(i=>i.translate(-renderScale*gw/2,-renderScale*gh/2));
+		pushPop(_=>{
+			resizeableCtxs.map(i=>i.translate(-renderScale*gw/2,-renderScale*gh/2));
 
-		rgb(0,0,0,0.3);
+			rgb(0,0,0,0.3);
 
-		for(var i=0;i<gw;++i)for(var j=0;j<gh;++j)
-			fillCircle(i,j,0.05);
+			for(var i=0;i<gw;++i)for(var j=0;j<gh;++j)
+				fillCircle(i,j,0.05);
 
-		var progress = clamp((tick-updateTick)/animationInterval,0,1);
-		var invP = 1-progress;
-		throng.sort((a,b)=>{if(a.y == b.y){return a.spriteId-b.spriteId} return a.y-b.y});
-		throng.map(i=>actionSwitch(i.activeAction,
-			_=>peopleSprites.drawPerson(i.x,i.y,i.spriteId,tick),
-			_=>peopleSprites.drawPerson(i.x,i.y+invP,i.spriteId,tick),
-			_=>peopleSprites.drawPerson(i.x,i.y-invP,i.spriteId,tick),
-			_=>peopleSprites.drawPerson(i.x+invP,i.y,i.spriteId,tick),
-			_=>peopleSprites.drawPerson(i.x-invP,i.y,i.spriteId,tick)
-		));
+			var progress = clamp((tick-updateTick)/animationInterval,0,1);
+			var invP = 1-progress;
+			throng.sort((a,b)=>{if(a.y == b.y){return a.spriteId-b.spriteId} return a.y-b.y});
+			throng.map(i=>actionSwitch(i.activeAction,
+				_=>peopleSprites.drawPerson(i.x,i.y,i.spriteId,tick),
+				_=>peopleSprites.drawPerson(i.x,i.y+invP,i.spriteId,tick),
+				_=>peopleSprites.drawPerson(i.x,i.y-invP,i.spriteId,tick),
+				_=>peopleSprites.drawPerson(i.x+invP,i.y,i.spriteId,tick),
+				_=>peopleSprites.drawPerson(i.x-invP,i.y,i.spriteId,tick)
+			));
 
-		explosion.draw();
-		personDeathEffects.process();
-		backgroundEffects.draw(tick);
+			explosion.draw();
+			personDeathEffects.process();
+			backgroundEffects.draw(tick);
+		});
+
+
+		if (tick%updateInterval<prevTick%updateInterval) {
+			updateTick = tick;
+			throng.map(i=>i.update());
+			var deads = [];
+			throng.map(i=>{
+				if (i.dead) return;
+				if (i.activeAction!==BOMB) return;
+				explosion.explode(i.x,i.y);
+				grid = gridify();
+				throng.map(q=>grid[q.x][q.y].push(q));
+				var x = i.x, y = i.y;
+				var adjacentCells = grid[x][y];
+				if(x>0)adjacentCells=adjacentCells.concat(grid[x-1][y]);
+				if(y>0)adjacentCells=adjacentCells.concat(grid[x][y-1]);
+				if(x<gw-1)adjacentCells=adjacentCells.concat(grid[x+1][y]);
+				if(y<gh-1)adjacentCells=adjacentCells.concat(grid[x][y+1]);
+				adjacentCells.map(j=>{
+					if(j.dead)return;
+					j.dead = true;
+					personDeathEffects.newEffect(j.x, j.y,peopleSprites.sprites[j.spriteId].flairColor);
+					if(j.player)deads.push(j.player);
+					if(i===j)return;
+					if(j.player)i.player.points += 5;
+					else        i.player.points -= 1;
+				});
+			});
+			throng = throng.filter(i=>!i.dead);
+			deads.map(i=>i.reassign());
+			throng.map((e,i)=>{if(!e.player)e.ai(e)});
+		}
+
+		if(init) {
+			showIntro();
+		}
 	});
 
-
-	if (tick%updateInterval<prevTick%updateInterval) {
-		updateTick = tick;
-		grid = gridify();
-		//throng.map(i=>grid[i.x][i.y].push(i));
-		throng.map(i=>i.update());
-		var deads = [];
-		throng.map(i=>{
-			if (i.activeAction!==BOMB) return;
-			explosion.explode(i.x,i.y);
-			var x = i.x, y = i.y;
-			var adjacentCells = grid[x][y];
-			if(x>0)adjacentCells=adjacentCells.concat(grid[x-1][y]);
-			if(y>0)adjacentCells=adjacentCells.concat(grid[x][y-1]);
-			if(x<gw-1)adjacentCells=adjacentCells.concat(grid[x+1][y]);
-			if(y<gh-1)adjacentCells=adjacentCells.concat(grid[x][y+1]);
-			adjacentCells.map(j=>{
-				throng.splice(throng.indexOf(j),1);
-				console.log(j);
-				personDeathEffects.newEffect(j.x, j.y,peopleSprites.sprites[j.spriteId].flairColor);
-				if(j.player)deads.push(j.player);
-				if(i===j)return;
-				if(j.player)i.player.points += 5;
-				else        i.player.points -= 1;
-			});
-		});
-		deads.map(i=>i.reassign());
-		throng.map((e,i)=>{if(!e.player)e.ai(e)});
-		// console.log("P1: "+P1.points+" | P2: "+P2.points);
-	}
-
-	if(init) {
-		showIntro();
+	if (splash.isActive()) onkeydown = e => splash.close();
+	else if(init) {
 		onkeydown = introKeyListener;
-	} 
-	else 
-		onkeydown = gameKeyListener;
-}))();
+	} else onkeydown = gameKeyListener;
+	splash.render(W.getContext('2d'));
+});
 
 }
