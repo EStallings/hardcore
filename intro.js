@@ -50,13 +50,17 @@ var ctlD;
 var ctlL;
 var ctlR;
 var ctlB;
+var boundKeys = [];
 introKeyListener = e => {
   if (e.keyCode === 13) {
     if (state < 6) {state++;return;}
     if (state === 16) {init = false; return;}
     if (state === 21) {init = false; return;}
     if (state === 26) {init = false; return;}
+    return; //Cannot bind enter to anything else.
   }
+  if(boundKeys[e.keyCode]) return;
+  if(state >= 6) boundKeys[e.keyCode] = true;
 
   if (state === 6) {ctlU = e.keyCode;state++;return;}
   if (state === 7) {ctlD = e.keyCode;state++;return;}
@@ -97,8 +101,6 @@ introKeyListener = e => {
     var P4 = new player(ctlU, ctlD, ctlL, ctlR, ctlB);
     return;
   }
-
-  console.log(state);
 };
 
 var imgSwitch = function() {
