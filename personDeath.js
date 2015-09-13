@@ -1,5 +1,3 @@
-
-
 var flairColors = [
 	'#f80',
 	'#f08',
@@ -60,7 +58,7 @@ personDeathEffects = {
 				part.step = Math.min(part.step + 0.003, 1);
 			}
 			if(fadeout) {
-				this.fade *= 0.995;
+				this.fade *= 0.90;
 			}
 			if(this.fade < 0.01) {
 				this.finished = true;
@@ -68,11 +66,3 @@ personDeathEffects = {
 		}
 	}
 }
-
-// personDeathEffects.newEffect(i, j*2, flairColors[rint(flairColors.length)]);
-
-
-// function draw() {
-// 	personDeathEffects.process();
-// 	requestAnimationFrame(draw);
-// }draw();
