@@ -29,10 +29,29 @@ peopleSprites = {
 		'#BE723C',
 		'#DFB997'
 	],
+	hairColors : [
+		null,
+		null,
+		'#FCFFE3',
+		'#114'
+	],
 	head : function(C, x, shouldy, bodyHeight, headWidth, headHeight, headGap, headColor, flairColor, shadesType, hairColor, hairType) {
-		C.fillStyle = headColor;
 		C.shadowColor = flairColor;
 		C.shadowBlur = 8;
+		switch(hairType) {
+			case 0: //Mohawk
+				C.fillStyle = hairColor;
+				C.fillRect(x+headWidth/2-0.2, shouldy-bodyHeight-headGap-0.15, 0.2, 0.2);
+				break;
+			case 1:
+				break;
+			case 2: //Front-do
+				break;
+			case 3: //Bald
+				break;
+		}
+
+		C.fillStyle = headColor;
 		C.fillRect(x, shouldy-bodyHeight-headGap, headWidth, headHeight);
 		C.fillStyle = '#000';
 		switch(shadesType) {
@@ -77,16 +96,29 @@ peopleSprites = {
 
 		}
 
+		C.fillStyle = C.strokeStyle = hairColor;
+		C.lineWidth = 0.15;
 		switch(hairType) {
 			case 0: //Mohawk
+				C.fillRect(x+headWidth/2, shouldy-bodyHeight-headGap-0.15, 0.2, 0.2);
 				break;
-			case 1: //SquareTop
+			case 1: //Spiked
+				C.fillRect(x, shouldy-bodyHeight-headGap-0.1, headWidth, 0.1);
+				C.beginPath();
+				C.moveTo(x+0.0, shouldy-bodyHeight-headGap);
+				C.lineTo(x+0.1, shouldy-bodyHeight-headGap-0.2);
+				C.moveTo(x+0.3, shouldy-bodyHeight-headGap);
+				C.lineTo(x+0.4, shouldy-bodyHeight-headGap-0.2);
+				C.moveTo(x+0.6, shouldy-bodyHeight-headGap);
+				C.lineTo(x+0.7, shouldy-bodyHeight-headGap-0.2);
+				C.stroke();
+				C.closePath();
 				break;
 			case 2: //Front-do
+				C.fillRect(x, shouldy-bodyHeight-headGap-0.25, 0.1, 0.25);
+				C.fillRect(x+0.1, shouldy-bodyHeight-headGap-0.25, headWidth, 0.25);
 				break;
 			case 3: //Bald
-				break;
-			case 'DJ': //DJ
 				break;
 		}
 	},
@@ -169,6 +201,9 @@ peopleSprites = {
 		bodyCtx.scale(32, 32);
 		var headColor = this.skinTones[rint(this.skinTones.length)];
 		var shirtColor = this.shirtColors[rint(this.shirtColors.length)];
+		var hairColor = this.hairColors[rint(this.hairColors.length)];
+
+		var hairType = rint(4);
 		if(DJ) {
 			// var shirtColor = '#ff69b4';
 			var flairColor = flairOverride;
@@ -203,9 +238,9 @@ peopleSprites = {
 		var headWidth = headRadius;
 		var headHeight = headRadius;
 		var headGap = -0.05;
-
+		hairColor = hairColor || flairColor;
 		this.bodyPill(bodyCtx, x, hipy, shouldy, bodyWidth, bodyHeight, shirtColor, flairColor, clothesType);
-		this.head(headCtx, x+(1-headWidth)/2,shouldy, bodyHeight, headWidth, headHeight, headGap, headColor, flairColor, shadesType);
+		this.head(headCtx, x+(1-headWidth)/2,shouldy, bodyHeight, headWidth, headHeight, headGap, headColor, flairColor, shadesType, hairColor, hairType);
 		
 		document.body.removeChild(headCvs);
 		document.body.removeChild(bodyCvs);
