@@ -15,7 +15,7 @@ var splash = (_=>{
 	return {
 		isActive:_=>gg!==0,
 		render:gfx=>{
-			g += (gg-g)*0.01;
+			g += (gg-g)*0.2;
 			if(g<0.01)return;
 			gy = wh/2;
 			y += (gy-y)*0.02;
@@ -28,18 +28,19 @@ var splash = (_=>{
 			gfx.fillStyle="rgba(0,0,0,"+(a*g)+")";
 			gfx.fillRect(0,0,ww,wh);
 
+			gfx.globalAlpha = g;
 			gfx.translate(ww/2,y);
 			gfx.scale(s,s);
 			gfx.rotate(r);
 			gfx.drawImage(img,-img.width/2,-img.height/2);
 			gfx.restore();
 
+			gfx.globalAlpha = g*(Math.max(0,c)*(Math.sin(tick*0.003)*0.2+0.6));
 			gfx.save();
 			gfx.translate(ww/2,wh/2+350);
-			gfx.globalAlpha = g*Math.max(0,c)*(Math.sin(tick*0.003)*0.2+0.6);
 			gfx.drawImage(cont,-cont.width/2,-cont.height/2);
-			gfx.globalAlpha = 1;
 			gfx.restore();
+			gfx.globalAlpha = 1;
 		},close:_=>{
 			gg = 0;
 		}

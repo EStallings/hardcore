@@ -153,7 +153,7 @@ onclick  =_=> audio.muted = !audio.muted;
 var tick=performance.now(),prevTick=tick;
 loop = _ => pushPop(_=>{animating && requestAnimationFrame(loop);
 	prevTick=tick;tick=performance.now();
-	if(!splash.isActive) pushPop(_=>{
+	if(!splash.isActive()) pushPop(_=>{
 		resizeableCtxs.map(i=>i.clearRect(0,0,ww,wh));
 		resizeableCtxs.map(i=>i.translate(ww/2,wh/2));
 
@@ -216,11 +216,13 @@ loop = _ => pushPop(_=>{animating && requestAnimationFrame(loop);
 
 		if(init) {
 			showIntro();
-			onkeydown = introKeyListener;
 		}
-		else
-			onkeydown = gameKeyListener;
 	});
+
+	if (splash.isActive()) onkeydown = e => splash.close();
+	else if(init) {
+		onkeydown = introKeyListener;
+	} else onkeydown = gameKeyListener;
 	splash.render(W.getContext('2d'));
 });
 
