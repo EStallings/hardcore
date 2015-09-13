@@ -31,8 +31,6 @@ backgroundEffects = {
 	},
 	draw : function(t) {
 		//DJ:
-		this.C.fillStyle = '#fff';
-		this.C.fillRect(0,0,10,10);
 		t = t/60;
 		var x = gw/2*32-16;
 		var y = -116;
@@ -111,8 +109,6 @@ backgroundEffects = {
 		pattern1(this, gw*32+144, gh*32/2);
 		pattern2(this, -80, gh*32/2);
 		pattern2(this, gw*32+144, gh*32/2);
-
-
 
 		this.C.fillStyle = '#222';
 		this.C.fillRect(-160, -160+gh*32/2, 160, 70);
