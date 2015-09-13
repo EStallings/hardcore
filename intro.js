@@ -100,7 +100,7 @@ introKeyListener = e => {
 		}
 		return; //Cannot bind enter to anything else.
 	}
-	if(e.keyCode === 32 && scrubs.length === 0) {
+	if(e.keyCode === 32 && state === 6) { 
 		state = 27;
 		P1 = new player(87, 83, 65, 68, 81);
 		P2 = new player(73, 75, 74, 76, 85);
