@@ -95,35 +95,36 @@ backgroundEffects = {
 		this.C.closePath();
 
 		//Speakers
+		var sb = sint;
 		this.C.fillStyle = '#333';
-		this.C.fillRect(32, -90, 80, 110);
-		this.C.fillRect(gw*32-80+32, -90, 80, 110);
+		this.C.fillRect(32, -90+sb, 80, 110);
+		this.C.fillRect(gw*32-80+32, -90+sb, 80, 110);
 
-		this.C.fillRect(-160, -90, 160, gh*32+160-32);
-		this.C.fillRect(gw*32+64, -90, 160, gh*32+160-32);
+		this.C.fillRect(-160, -90+sb, 160, gh*32+160-32);
+		this.C.fillRect(gw*32+64, -90+sb, 160, gh*32+160-32);
 		this.C.fillStyle = '#222';
-		this.C.fillRect(32, -160, 80, 70);
-		this.C.fillRect(gw*32-80+32, -160, 80, 70);
+		this.C.fillRect(32, -160+sb, 80, 70);
+		this.C.fillRect(gw*32-80+32, -160+sb, 80, 70);
 
-		this.C.fillRect(-160, -160, 160, 70);
-		this.C.fillRect(gw*32+64, -160, 160, 70);
+		this.C.fillRect(-160, -160+sb, 160, 70);
+		this.C.fillRect(gw*32+64, -160+sb, 160, 70);
 
-		this.speaker(32+40, y+100, 23+1.5*-sint);
-		this.speaker(32+40, y+55, 14+2*sint);
-		this.speaker(gw*32-80+32+40, y+100, 23+1.5*-sint);
-		this.speaker(gw*32-80+32+40, y+55, 14+2*sint);
+		this.speaker(32+40, y+sb+100, 23+1.5*-sint);
+		this.speaker(32+40, y+sb+55, 14+2*sint);
+		this.speaker(gw*32-80+32+40, y+sb+100, 23+1.5*-sint);
+		this.speaker(gw*32-80+32+40, y+sb+55, 14+2*sint);
 
 		function pattern1 (that, x, y) {
-			that.speaker(x, y, 32+1.5*-sint);
-			that.speaker(x-55, y, 16+1*-sint);
-			that.speaker(x+55, y, 16+1*-sint);
-			that.speaker(x-40, y-50, 24+1.5*sint);
-			that.speaker(x+40, y-50, 24+1.5*sint);
+			that.speaker(x, y+sb, 32+1.5*-sint);
+			that.speaker(x-55, y+sb, 16+1*-sint);
+			that.speaker(x+55, y+sb, 16+1*-sint);
+			that.speaker(x-40, y+sb-50, 24+1.5*sint);
+			that.speaker(x+40, y+sb-50, 24+1.5*sint);
 		}
 		function pattern2 (that, x, y) {
-			that.speaker(x-40, y+50, 24+1.5*sint);
-			that.speaker(x+40, y+50, 24+1.5*sint);
-			that.speaker(x, y+130, 50+3*-sint);
+			that.speaker(x-40, y+sb+50, 24+1.5*sint);
+			that.speaker(x+40, y+sb+50, 24+1.5*sint);
+			that.speaker(x, y+sb+130, 50+3*-sint);
 		}
 		pattern1(this, -80, 0);
 		pattern1(this, -80, gh*32/2);
@@ -133,11 +134,8 @@ backgroundEffects = {
 		pattern2(this, gw*32+144, gh*32/2);
 
 		this.C.fillStyle = '#222';
-		this.C.fillRect(-160, -160+gh*32/2, 160, 70);
-		this.C.fillRect(gw*32+64, -160+gh*32/2, 160, 70);
-
-		var decorText1 = '罗我思故我在非常的事情本身我这样做阿梅德';
-		var decorText2 = '보라나는그것이내가바로그일자체입니다때문에생각하는가';
+		this.C.fillRect(-160, -160+gh*32/2+sb, 160, 70);
+		this.C.fillRect(gw*32+64, -160+gh*32/2+sb, 160, 70);
 	}
 
 }
