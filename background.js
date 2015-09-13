@@ -46,7 +46,6 @@ backgroundEffects = {
 		this.circle(x, y, r/3);
 	},
 	draw : function(t) {
-
 		this.C.shadowColor = this.flairColor;
 		this.C.shadowBlur = 20;
 		this.drawImage(this.logo.img, gw*32/2+32-(this.logo.w/2)+this.logo.ox, -150-(this.logo.h/2)+this.logo.oy, this.logo.w, this.logo.h);
@@ -57,6 +56,7 @@ backgroundEffects = {
 		var x = gw/2*32-16;
 		var y = -116;
 		var sint = Math.sin(t);
+		var sin2t = Math.sin(2*t)
 		var hy2 = lerp(-1, 1, sint);
 		this.C.drawImage(this.dj.bodyCvs, x, y+hy2);
 		this.C.drawImage(this.dj.headCvs, x+Math.cos(t)*3, y+sint*3);
@@ -108,22 +108,22 @@ backgroundEffects = {
 		this.C.fillRect(-160, -160, 160, 70);
 		this.C.fillRect(gw*32+64, -160, 160, 70);
 
-		this.speaker(32+40, y+100, 23+1.5*sint);
+		this.speaker(32+40, y+100, 23+1.5*-sint);
 		this.speaker(32+40, y+55, 14+2*sint);
-		this.speaker(gw*32-80+32+40, y+100, 23+1.5*sint);
+		this.speaker(gw*32-80+32+40, y+100, 23+1.5*-sint);
 		this.speaker(gw*32-80+32+40, y+55, 14+2*sint);
 
 		function pattern1 (that, x, y) {
-			that.speaker(x, y, 32+1.5*sint);
-			that.speaker(x-55, y, 16+1*sint);
-			that.speaker(x+55, y, 16+1*sint);
+			that.speaker(x, y, 32+1.5*-sint);
+			that.speaker(x-55, y, 16+1*-sint);
+			that.speaker(x+55, y, 16+1*-sint);
 			that.speaker(x-40, y-50, 24+1.5*sint);
 			that.speaker(x+40, y-50, 24+1.5*sint);
 		}
 		function pattern2 (that, x, y) {
 			that.speaker(x-40, y+50, 24+1.5*sint);
 			that.speaker(x+40, y+50, 24+1.5*sint);
-			that.speaker(x, y+130, 50+3*sint);
+			that.speaker(x, y+130, 50+3*-sint);
 		}
 		pattern1(this, -80, 0);
 		pattern1(this, -80, gh*32/2);

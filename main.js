@@ -1,6 +1,6 @@
 with((D=document).body.appendChild(W=D.createElement("canvas")).getContext("2d"))with(Math){
 var audio = new Audio('perturbator.mp3');
-var BPM = 128;
+var BPM = 132;
 audio.play();
 audio.loop = true;
 audio.volume = 0.4;
