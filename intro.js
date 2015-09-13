@@ -98,6 +98,10 @@ introKeyListener = e => {
 
 			init = false; return;
 		}
+		if (state > 27) {
+			init = false;
+			return;
+		}
 		return; //Cannot bind enter to anything else.
 	}
 	if(e.keyCode === 32 && state === 6) { 
