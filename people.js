@@ -221,7 +221,7 @@ peopleSprites = {
 	drawPerson : function(x, y, i, t) {
 		x*=32;
 		y*=32;
-		t = Math.sin(t/60);
+		t = Math.sin(4*t*(BPM/6000)/(Math.PI*2));
 		var hdx = 1+((i%5)/5-0.5);
 		var hdy = 1+((i%7)/7-0.5);
 

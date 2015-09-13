@@ -1,4 +1,8 @@
 with((D=document).body.appendChild(W=D.createElement("canvas")).getContext("2d"))with(Math){
+var audio = new Audio('perturbator.mp3');
+var BPM = 128;
+audio.play();
+audio.loop = true;
 explosion.init();
 backgroundEffects.init();
 var resizeableCanvases = [BKG, W, peopleSprites.W, explosion.W, personDeathEffects.W, backgroundEffects.W];
@@ -7,8 +11,8 @@ var resizeableCtxs = resizeableCanvases.map(i=>i.getContext('2d'));
 
 //==  USER DEFINABLES  =======================================================//
 
-var updateInterval    = 1000;
-var animationInterval = 500;
+var updateInterval    = (60000/BPM)*2;
+var animationInterval = updateInterval/2;
 
 var gw = 10;
 var gh = 10;
@@ -143,8 +147,7 @@ var gameKeyListener = e => {
 	});
 };
 
-onmouseup =_=> animating = true;
-
+onclick  =_=> audio.muted = !audio.muted;
 //==  MAIN LOOP  =============================================================//
 
 var tick=performance.now(),prevTick=tick;

@@ -69,9 +69,9 @@ wh = innerHeight;
 					part.step = Math.min(part.step + 0.03, 1);
 				}
 				if(fadeout) {
-					this.fade *= 0.85;
+					this.fade *= lerp(0.1, 0.85, this.fade);
 				}
-				if(this.fade < 0.01) {
+				if(this.fade < 0.7) {
 					this.finished = true;
 				}
 			}
