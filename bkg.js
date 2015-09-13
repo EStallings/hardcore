@@ -55,10 +55,12 @@ var drawBkg =_=>{ with(bkg) pushPop(_=>{
 	var offset1 = measureText("A ").width;
 	var offset2 = measureText("A TEAM POWERFLOWER ").width;
 	var ox = 170;
-	fillText("A", gw*32/2-ox-32, gh*32+250);
+	fillText("A", gw*32/2-ox-32, gh*32+230);
 	shadowColor = hue(tick*0.001);
 	shadowBlur = 10;
-	fillText("TEAM POWERFLOWER", gw*32/2-ox-32+offset1, gh*32+250);
+	fillText("TEAM POWERFLOWER", gw*32/2-ox-32+offset1, gh*32+230);
 	shadowBlur = 0;
-	fillText("GAME", gw*32/2-ox-32+offset2, gh*32+250);
+	fillText("GAME", gw*32/2-ox-32+offset2, gh*32+230);
+	font = 'Italic 25px Impact';
+	fillText("MUSIC BY ARKANOID74", gw*32/2-80-32, gh*32+280);
 })}
