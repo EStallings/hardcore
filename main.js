@@ -28,7 +28,6 @@ var rgb = (r,g,b,a) => fillStyle=strokeStyle=shadowColor="rgba("+~~(255*r)+","+~
 var pushPop = f => { resizeableCtxs.map(i=>i.save()); f(); resizeableCtxs.map(i=>i.restore()); };
 var fillCircle = (x,y,r) => { beginPath(); arc(x,y,r,0,2*PI); fill(); };
 
-
 var id =_=>0;
 
 //==  GAME UTILS  ============================================================//
@@ -123,19 +122,22 @@ var player = function(ctlU,ctlD,ctlL,ctlR,ctlB) {
 		});
 
 		var first = throng[0];
-		if(!first.player){
+		if(first && !first.player){
 			first.player = this;
 			this.person = first;
-		} else animating = false;
+		} else gameOver = true;
 	})();
 }
 
 //==  TESTING  ===============================================================//
 
-for (var i=0;i<20;++i) new person(~~(random()*gw),~~(random()*gh));
+var initialize =_=> {
+	for (var i=0;i<20;++i) new person(~~(random()*gw),~~(random()*gh));
+};
 
-// var P1 = new player(87,83,65,68,81);
-// var P2 = new player(79,76,75,59,73);
+initialize();
+
+var gameOver = false;
 
 var gameKeyListener = e => {
 	if(e.keyCode === 27) {
@@ -150,12 +152,18 @@ var gameKeyListener = e => {
 		if(k===i.ctlR)i.person.pendingAction = WEST;
 		if(k===i.ctlB)i.person.pendingAction = BOMB;
 	});
+	if (gameOver && e.keyCode === 32) {
+		gameOver = false;
+		initialize();
+		scrubs.map(i=>i.reassign());
+		scrubs.map(i=>i.points=0);
+	}
 };
 
 //==  MAIN LOOP  =============================================================//
 
 var tick=performance.now(),prevTick=tick;
-loop = _ => pushPop(_=>{animating && requestAnimationFrame(loop);
+loop = _ => pushPop(_=>{requestAnimationFrame(loop);
 	prevTick=tick;tick=performance.now();
 	if(!splash.isActive()) pushPop(_=>{
 		resizeableCtxs.map(i=>i.clearRect(0,0,ww,wh));
@@ -207,7 +215,6 @@ loop = _ => pushPop(_=>{animating && requestAnimationFrame(loop);
 				adjacentCells.map(j=>{
 					if(j.dead)return;
 					j.dead = true;
-					console.log(j);
 					personDeathEffects.newEffect(j.x, j.y,peopleSprites.sprites[j.spriteId].flairColor);
 					if(j.player)deads.push(j.player);
 					if(i===j)return;
