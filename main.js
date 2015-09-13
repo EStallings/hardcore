@@ -148,74 +148,77 @@ onmouseup =_=> animating = true;
 //==  MAIN LOOP  =============================================================//
 
 var tick=performance.now(),prevTick=tick;
-(loop = _ => pushPop(_=>{animating && requestAnimationFrame(loop);
+loop = _ => pushPop(_=>{animating && requestAnimationFrame(loop);
 	prevTick=tick;tick=performance.now();
-	resizeableCtxs.map(i=>i.clearRect(0,0,ww,wh));
-	resizeableCtxs.map(i=>i.translate(ww/2,wh/2));
+	if(!splash.isActive) pushPop(_=>{
+		resizeableCtxs.map(i=>i.clearRect(0,0,ww,wh));
+		resizeableCtxs.map(i=>i.translate(ww/2,wh/2));
 
-	drawBkg();
+		drawBkg();
 
-	pushPop(_=>{
-		resizeableCtxs.map(i=>i.translate(-renderScale*gw/2,-renderScale*gh/2));
+		pushPop(_=>{
+			resizeableCtxs.map(i=>i.translate(-renderScale*gw/2,-renderScale*gh/2));
 
-		rgb(0,0,0,0.3);
+			rgb(0,0,0,0.3);
 
-		for(var i=0;i<gw;++i)for(var j=0;j<gh;++j)
-			fillCircle(i,j,0.05);
+			for(var i=0;i<gw;++i)for(var j=0;j<gh;++j)
+				fillCircle(i,j,0.05);
 
-		var progress = clamp((tick-updateTick)/animationInterval,0,1);
-		var invP = 1-progress;
-		throng.sort((a,b)=>{if(a.y == b.y){return a.spriteId-b.spriteId} return a.y-b.y});
-		throng.map(i=>actionSwitch(i.activeAction,
-			_=>peopleSprites.drawPerson(i.x,i.y,i.spriteId,tick),
-			_=>peopleSprites.drawPerson(i.x,i.y+invP,i.spriteId,tick),
-			_=>peopleSprites.drawPerson(i.x,i.y-invP,i.spriteId,tick),
-			_=>peopleSprites.drawPerson(i.x+invP,i.y,i.spriteId,tick),
-			_=>peopleSprites.drawPerson(i.x-invP,i.y,i.spriteId,tick)
-		));
+			var progress = clamp((tick-updateTick)/animationInterval,0,1);
+			var invP = 1-progress;
+			throng.sort((a,b)=>{if(a.y == b.y){return a.spriteId-b.spriteId} return a.y-b.y});
+			throng.map(i=>actionSwitch(i.activeAction,
+				_=>peopleSprites.drawPerson(i.x,i.y,i.spriteId,tick),
+				_=>peopleSprites.drawPerson(i.x,i.y+invP,i.spriteId,tick),
+				_=>peopleSprites.drawPerson(i.x,i.y-invP,i.spriteId,tick),
+				_=>peopleSprites.drawPerson(i.x+invP,i.y,i.spriteId,tick),
+				_=>peopleSprites.drawPerson(i.x-invP,i.y,i.spriteId,tick)
+			));
 
-		explosion.draw();
-		personDeathEffects.process();
-		backgroundEffects.draw(tick);
-	});
-
-
-	if (tick%updateInterval<prevTick%updateInterval) {
-		updateTick = tick;
-		grid = gridify();
-		//throng.map(i=>grid[i.x][i.y].push(i));
-		throng.map(i=>i.update());
-		var deads = [];
-		throng.map(i=>{
-			if (i.activeAction!==BOMB) return;
-			explosion.explode(i.x,i.y);
-			var x = i.x, y = i.y;
-			var adjacentCells = grid[x][y];
-			if(x>0)adjacentCells=adjacentCells.concat(grid[x-1][y]);
-			if(y>0)adjacentCells=adjacentCells.concat(grid[x][y-1]);
-			if(x<gw-1)adjacentCells=adjacentCells.concat(grid[x+1][y]);
-			if(y<gh-1)adjacentCells=adjacentCells.concat(grid[x][y+1]);
-			adjacentCells.map(j=>{
-				throng.splice(throng.indexOf(j),1);
-				console.log(j);
-				personDeathEffects.newEffect(j.x, j.y,peopleSprites.sprites[j.spriteId].flairColor);
-				if(j.player)deads.push(j.player);
-				if(i===j)return;
-				if(j.player)i.player.points += 5;
-				else        i.player.points -= 1;
-			});
+			explosion.draw();
+			personDeathEffects.process();
+			backgroundEffects.draw(tick);
 		});
-		deads.map(i=>i.reassign());
-		throng.map((e,i)=>{if(!e.player)e.ai(e)});
-		// console.log("P1: "+P1.points+" | P2: "+P2.points);
-	}
 
-	if(init) {
-		showIntro();
-		onkeydown = introKeyListener;
-	}
-	else
-		onkeydown = gameKeyListener;
-}))();
+
+		if (tick%updateInterval<prevTick%updateInterval) {
+			updateTick = tick;
+			grid = gridify();
+			//throng.map(i=>grid[i.x][i.y].push(i));
+			throng.map(i=>i.update());
+			var deads = [];
+			throng.map(i=>{
+				if (i.activeAction!==BOMB) return;
+				explosion.explode(i.x,i.y);
+				var x = i.x, y = i.y;
+				var adjacentCells = grid[x][y];
+				if(x>0)adjacentCells=adjacentCells.concat(grid[x-1][y]);
+				if(y>0)adjacentCells=adjacentCells.concat(grid[x][y-1]);
+				if(x<gw-1)adjacentCells=adjacentCells.concat(grid[x+1][y]);
+				if(y<gh-1)adjacentCells=adjacentCells.concat(grid[x][y+1]);
+				adjacentCells.map(j=>{
+					throng.splice(throng.indexOf(j),1);
+					console.log(j);
+					personDeathEffects.newEffect(j.x, j.y,peopleSprites.sprites[j.spriteId].flairColor);
+					if(j.player)deads.push(j.player);
+					if(i===j)return;
+					if(j.player)i.player.points += 5;
+					else        i.player.points -= 1;
+				});
+			});
+			deads.map(i=>i.reassign());
+			throng.map((e,i)=>{if(!e.player)e.ai(e)});
+			// console.log("P1: "+P1.points+" | P2: "+P2.points);
+		}
+
+		if(init) {
+			showIntro();
+			onkeydown = introKeyListener;
+		}
+		else
+			onkeydown = gameKeyListener;
+	});
+	splash.render(W.getContext('2d'));
+});
 
 }
