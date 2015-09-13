@@ -35,12 +35,12 @@ var id =_=>0;
 animationInterval = min(updateInterval,animationInterval);
 var updateTick = performance.now();
 var animating = true;
-var init = true;
+var init = false;
 
 var NONE  = 0;
 var NORTH = 1;
-var SOUTH = 2;
-var EAST  = 3;
+var EAST  = 2;
+var SOUTH = 3;
 var WEST  = 4;
 var BOMB  = 5;
 
@@ -69,6 +69,12 @@ var gridify =_=>{
 var grid     = gridify();
 var throng   = [];
 var scrubs = [];
+var AIs =[
+	that=>{that.pendingAction = ~~(random()*5)},
+	that=>{if(random() < 0.50) { that.memoryAction = rint(5);} that.pendingAction = that.memoryAction;},
+	that=>{if(that.dist > that.prefDist) { that.dist = 0; that.memoryAction = ((that.memoryAction)%4)+1;} that.pendingAction = that.memoryAction; that.dist++;},
+	that=>{if(that.dist > that.prefDist) { that.dist = 0; that.memoryAction--; if(that.memoryAction <= 0) that.memoryAction = 4;} that.pendingAction = that.memoryAction; that.dist++;}
+];
 
 var person = function (x,y) {
 	throng.push(this);
@@ -78,6 +84,12 @@ var person = function (x,y) {
 	this.pendingAction = NONE;
 	this.activeAction  = NONE;
 	this.player = undefined;
+	this.ai = AIs[rint(AIs.length)];
+	this.px = this.x;
+	this.py = this.y;
+	this.prefDist = rint(3)+2;
+	this.dist = this.prefDist+1;
+	this.memoryAction = this.pendingAction;
 	this.spriteId = peopleSprites.makePerson();
 
 	(this.update =_=>{
@@ -198,14 +210,16 @@ var tick=performance.now(),prevTick=tick;
 			});
 		});
 		deads.map(i=>i.reassign());
-		throng.map((e,i)=>{if(!e.player)e.pendingAction = ~~(random()*5)});
+		throng.map((e,i)=>{if(!e.player)e.ai(e)});
 		// console.log("P1: "+P1.points+" | P2: "+P2.points);
 	}
 
 	if(init) {
 		showIntro();
 		onkeydown = introKeyListener;
-	} else onkeydown = gameKeyListener;
+	} 
+	else 
+		onkeydown = gameKeyListener;
 }))();
 
 }
