@@ -31,8 +31,6 @@ backgroundEffects = {
 	},
 	draw : function(t) {
 		//DJ:
-		this.C.fillStyle = '#fff';
-		this.C.fillRect(0,0,10,10);
 		t = t/60;
 		var x = gw/2*32-16;
 		var y = -116;
