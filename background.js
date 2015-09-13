@@ -31,7 +31,7 @@ backgroundEffects = {
 	},
 	draw : function(t) {
 		//DJ:
-		t = t/60;
+		t = 4*t*(BPM/6000)/(Math.PI*2);
 		var x = gw/2*32-16;
 		var y = -116;
 		var sint = Math.sin(t);

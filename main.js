@@ -1,5 +1,6 @@
 with((D=document).body.appendChild(W=D.createElement("canvas")).getContext("2d"))with(Math){
 var audio = new Audio('perturbator.mp3');
+var BPM = 128;
 audio.play();
 audio.loop = true;
 explosion.init();
@@ -146,8 +147,7 @@ var gameKeyListener = e => {
 	});
 };
 
-onmouseup =_=> animating = true;
-
+onclick  =_=> audio.muted = !audio.muted;
 //==  MAIN LOOP  =============================================================//
 
 var tick=performance.now(),prevTick=tick;
