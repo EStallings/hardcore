@@ -15,20 +15,22 @@ function hue(h){
 
 var drawBkg =_=>{ with(bkg) pushPop(_=>{
   scale(32,32);
-  translate(-0.25,-0.15)
+  translate(-0.25,-0.15);
   translate(-gw/2,-gh/2);
 
-  fillStyle = "#111"
   shadowBlur = 10;
   for(var i=0;i<gw;++i)for(var j=0;j<gh;++j){
-    var x = i-gw/2;
-    var y = j-gh/2;
-    shadowColor = hue(tick*0.001+(x*x+y*y)*2.35*Math.sin(tick*0.00001));
-    fillRect(i+0.05,j+0.05,0.9,0.9);
-  }
+    var x = i+0.5-gw/2;
+    var y = j+0.5-gh/2;
+    fillStyle = shadowColor = hue(tick*0.0003+(x*x+y*y)*2.35*Math.sin(tick*0.000003));
+    fillRect(i+0.025,j+0.025,0.95,0.95);
+  }shadowBlur = 0;
 
-  shadowBlur = 0;
-  fillStyle = "#151515"
+  fillStyle = "rgba(0,0,0,0.7)"
   for(var i=0;i<gw;++i)for(var j=0;j<gh;++j)
-    fillRect(i+0.2,j+0.2,0.6,0.6);
+    fillRect(i+0.025,j+0.025,0.95,0.95);
+
+  fillStyle = "rgba(0,0,0,0.75)"
+  for(var i=0;i<gw;++i)for(var j=0;j<gh;++j)
+    fillRect(i+0.1,j+0.1,0.8,0.8);
 })}
