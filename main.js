@@ -79,6 +79,7 @@ var AIs =[
 var person = function (x,y) {
 	throng.push(this);
 
+	this.dead = false;
 	this.x = x;
 	this.y = y;
 	this.pendingAction = NONE;
@@ -100,7 +101,6 @@ var person = function (x,y) {
 			_=>{++this.y;if(this.y>=gh){this.y=gh-1;this.activeAction=NONE}},
 			_=>{--this.x;if(this.x< 0 ){this.x=   0;this.activeAction=NONE}},
 			_=>{++this.x;if(this.x>=gw){this.x=gw-1;this.activeAction=NONE}});
-		grid[this.x][this.y].push(this);
 	})();
 }
 
@@ -189,13 +189,14 @@ loop = _ => pushPop(_=>{animating && requestAnimationFrame(loop);
 
 		if (tick%updateInterval<prevTick%updateInterval) {
 			updateTick = tick;
-			grid = gridify();
-			//throng.map(i=>grid[i.x][i.y].push(i));
 			throng.map(i=>i.update());
 			var deads = [];
 			throng.map(i=>{
+				if (i.dead) return;
 				if (i.activeAction!==BOMB) return;
 				explosion.explode(i.x,i.y);
+				grid = gridify();
+				throng.map(q=>grid[q.x][q.y].push(q));
 				var x = i.x, y = i.y;
 				var adjacentCells = grid[x][y];
 				if(x>0)adjacentCells=adjacentCells.concat(grid[x-1][y]);
@@ -203,7 +204,8 @@ loop = _ => pushPop(_=>{animating && requestAnimationFrame(loop);
 				if(x<gw-1)adjacentCells=adjacentCells.concat(grid[x+1][y]);
 				if(y<gh-1)adjacentCells=adjacentCells.concat(grid[x][y+1]);
 				adjacentCells.map(j=>{
-					throng.splice(throng.indexOf(j),1);
+					if(j.dead)return;
+					j.dead = true;
 					console.log(j);
 					personDeathEffects.newEffect(j.x, j.y,peopleSprites.sprites[j.spriteId].flairColor);
 					if(j.player)deads.push(j.player);
@@ -212,6 +214,7 @@ loop = _ => pushPop(_=>{animating && requestAnimationFrame(loop);
 					else        i.player.points -= 1;
 				});
 			});
+			throng = throng.filter(i=>!i.dead);
 			deads.map(i=>i.reassign());
 			throng.map((e,i)=>{if(!e.player)e.ai(e)});
 		}
