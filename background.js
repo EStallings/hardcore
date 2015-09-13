@@ -101,17 +101,9 @@ backgroundEffects = {
 			that.speaker(x+40, y-50, 24+1.5*sint);
 		}
 		function pattern2 (that, x, y) {
-<<<<<<< HEAD
-			that.circle(x-40, y+50, 24+1.5*sint);
-			that.circle(x+40, y+50, 24+1.5*sint);
-			that.circle(x, y+130, 50+3*sint);
-
-=======
 			that.speaker(x-40, y+50, 24+1.5*sint);
 			that.speaker(x+40, y+50, 24+1.5*sint);
 			that.speaker(x, y+130, 50+3*sint);
-
->>>>>>> 736bdf1f30619e049d9e60e9b6149d0721e8bcc6
 		}
 		pattern1(this, -80, 0);
 		pattern1(this, -80, gh*32/2);
@@ -124,14 +116,7 @@ backgroundEffects = {
 
 		this.C.fillStyle = '#222';
 		this.C.fillRect(-160, -160+gh*32/2, 160, 70);
-<<<<<<< HEAD
 		this.C.fillRect(gw*32+64, -160+gh*32/2, 160, 70);
-
-		this.C.fillStyle='#fff';
-
-=======
-		this.C.fillRect(gw*32+64, -160+gh*32/2, 160, 70);
->>>>>>> 736bdf1f30619e049d9e60e9b6149d0721e8bcc6
 	}
 
 }
