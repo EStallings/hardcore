@@ -12,8 +12,10 @@ backgroundEffects = {
 	effects: [],
 	W : tmp=document.createElement("canvas"),
 	C : document.body.appendChild(tmp).getContext("2d"),
+	colors : ['#ff69b4', '#69ffb4', '#b469ff', '#b4ff69', '#69ffb4'],
 	init : function() {
-		this.dj = peopleSprites.makePerson(true, '#ff69b4');
+		this.flairColor = this.colors[rint(this.colors.length)];
+		this.dj = peopleSprites.makePerson(true, this.flairColor);
 	},
 	circle : function(x, y, r) {
 		this.C.beginPath();
@@ -21,8 +23,13 @@ backgroundEffects = {
 		this.C.fill();
 		this.C.closePath();
 	},
+	speaker : function(x, y, r) {
+		this.C.fillStyle = '#fff';
+		this.circle(x, y, r);
+		this.C.fillStyle = '#333';
+		this.circle(x, y, r/3);
+	},
 	draw : function(t) {
-
 		//DJ:
 		this.C.fillStyle = '#fff';
 		this.C.fillRect(0,0,10,10);
@@ -35,12 +42,12 @@ backgroundEffects = {
 		this.C.drawImage(this.dj.headCvs, x+Math.cos(t)*3, y+sint*3);
 
 		//DJ Booth:
-		this.C.shadowColor = '#ff69b4';
-		this.C.shadowBlur = 0;
-		this.C.fillStyle = '#a0a0a0';
-		this.C.fillRect(x-16, y+55, 128, 40);
+		this.C.shadowColor = this.flairColor;
+		this.C.shadowBlur = 20;
 		this.C.fillStyle = '#898989';
 		this.C.fillRect(x-16, y+55+40, 128, 32);
+		this.C.fillStyle = '#a0a0a0';
+		this.C.fillRect(x-16, y+55, 128, 40);
 
 		this.C.fillStyle = '#fff';
 		this.circle(x+20, y+55+20, 16);
@@ -59,46 +66,52 @@ backgroundEffects = {
 		this.C.scale(1,4/3);
 		this.C.strokeStyle = '#000';
 		this.C.beginPath();
-		this.C.moveTo(x+20-Math.cos(t)*16, y+55+20-sint*16);
+		this.C.moveTo(x+20-Math.cos(t/4)*16, y+55+20-Math.sin(t/4)*16);
 		this.C.lineTo(x+20, y+55+20);
 		this.C.stroke();
-		this.C.moveTo(x+76-Math.cos(t)*16, y+55+20-sint*16);
+		this.C.moveTo(x+76-Math.cos((t+2)/4)*16, y+55+20-Math.sin((t+2)/4)*16);
 		this.C.lineTo(x+76, y+55+20);
 		this.C.stroke();
 		this.C.closePath();
 
 		//Speakers
-		this.C.fillStyle = '#a0a0a0';
-		this.C.fillRect(32, -160, 80, 70);
-		this.C.fillRect(gw*32-80+32, -160, 80, 70);
-
-		this.C.fillRect(-160, -160, 160, 70);
-		this.C.fillRect(gw*32+64, -160, 160, 70);
-		this.C.fillStyle = '#898989';
+		this.C.fillStyle = '#333';
 		this.C.fillRect(32, -90, 80, 110);
 		this.C.fillRect(gw*32-80+32, -90, 80, 110);
 
 		this.C.fillRect(-160, -90, 160, gh*32+160-32);
 		this.C.fillRect(gw*32+64, -90, 160, gh*32+160-32);
+		this.C.fillStyle = '#222';
+		this.C.fillRect(32, -160, 80, 70);
+		this.C.fillRect(gw*32-80+32, -160, 80, 70);
 
-		this.C.fillStyle = '#fff';
-		this.circle(32+40, y+100, 23+1.5*sint);
-		this.circle(32+40, y+55, 14+2*sint);
-		this.circle(gw*32-80+32+40, y+100, 23+1.5*sint);
-		this.circle(gw*32-80+32+40, y+55, 14+2*sint);
+		this.C.fillRect(-160, -160, 160, 70);
+		this.C.fillRect(gw*32+64, -160, 160, 70);
+
+		this.speaker(32+40, y+100, 23+1.5*sint);
+		this.speaker(32+40, y+55, 14+2*sint);
+		this.speaker(gw*32-80+32+40, y+100, 23+1.5*sint);
+		this.speaker(gw*32-80+32+40, y+55, 14+2*sint);
 
 		function pattern1 (that, x, y) {
-			that.circle(x, y, 32+1.5*sint);
-			that.circle(x-55, y, 16+1*sint);
-			that.circle(x+55, y, 16+1*sint);
-			that.circle(x-40, y-50, 24+1.5*sint);
-			that.circle(x+40, y-50, 24+1.5*sint);
+			that.speaker(x, y, 32+1.5*sint);
+			that.speaker(x-55, y, 16+1*sint);
+			that.speaker(x+55, y, 16+1*sint);
+			that.speaker(x-40, y-50, 24+1.5*sint);
+			that.speaker(x+40, y-50, 24+1.5*sint);
 		}
 		function pattern2 (that, x, y) {
+<<<<<<< HEAD
 			that.circle(x-40, y+50, 24+1.5*sint);
 			that.circle(x+40, y+50, 24+1.5*sint);
 			that.circle(x, y+130, 50+3*sint);
 
+=======
+			that.speaker(x-40, y+50, 24+1.5*sint);
+			that.speaker(x+40, y+50, 24+1.5*sint);
+			that.speaker(x, y+130, 50+3*sint);
+
+>>>>>>> 736bdf1f30619e049d9e60e9b6149d0721e8bcc6
 		}
 		pattern1(this, -80, 0);
 		pattern1(this, -80, gh*32/2);
@@ -109,12 +122,16 @@ backgroundEffects = {
 
 
 
-		this.C.fillStyle = '#a0a0a0';
+		this.C.fillStyle = '#222';
 		this.C.fillRect(-160, -160+gh*32/2, 160, 70);
+<<<<<<< HEAD
 		this.C.fillRect(gw*32+64, -160+gh*32/2, 160, 70);
 
 		this.C.fillStyle='#fff';
 
+=======
+		this.C.fillRect(gw*32+64, -160+gh*32/2, 160, 70);
+>>>>>>> 736bdf1f30619e049d9e60e9b6149d0721e8bcc6
 	}
 
 }
