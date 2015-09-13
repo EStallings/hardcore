@@ -113,8 +113,6 @@ backgroundEffects = {
 		pattern2(this, -80, gh*32/2);
 		pattern2(this, gw*32+144, gh*32/2);
 
-
-
 		this.C.fillStyle = '#222';
 		this.C.fillRect(-160, -160+gh*32/2, 160, 70);
 		this.C.fillRect(gw*32+64, -160+gh*32/2, 160, 70);		
