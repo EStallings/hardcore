@@ -12,6 +12,7 @@ backgroundEffects = {
 	effects: [],
 	W : tmp=document.createElement("canvas"),
 	C : document.body.appendChild(tmp).getContext("2d"),
+	r:0xff,g:0x69,b:0xb4,
 	init : function() {
 		this.dj = peopleSprites.makePerson(true, '#ff69b4');
 	},
@@ -59,10 +60,10 @@ backgroundEffects = {
 		this.C.scale(1,4/3);
 		this.C.strokeStyle = '#000';
 		this.C.beginPath();
-		this.C.moveTo(x+20-Math.cos(t)*16, y+55+20-sint*16);
+		this.C.moveTo(x+20-Math.cos(t/4)*16, y+55+20-Math.sin(t/4)*16);
 		this.C.lineTo(x+20, y+55+20);
 		this.C.stroke();
-		this.C.moveTo(x+76-Math.cos(t)*16, y+55+20-sint*16);
+		this.C.moveTo(x+76-Math.cos((t+2)/4)*16, y+55+20-Math.sin((t+2)/4)*16);
 		this.C.lineTo(x+76, y+55+20);
 		this.C.stroke();
 		this.C.closePath();
@@ -80,7 +81,9 @@ backgroundEffects = {
 	
 		this.C.fillRect(-160, -90, 160, gh*32+160-32);
 		this.C.fillRect(gw*32+64, -90, 160, gh*32+160-32);
-
+		// var tmp = 'rgba(' + Math.floor(255+(255-this.r/2)*Math.cos(t)) + ',' + Math.floor(255+(255-this.g/2)*Math.cos(t)) + ',' + Math.floor(255+(255-this.b/2)*Math.cos(t)) + ',1)';
+		// this.C.fillStyle = tmp;
+		// console.log(tmp);
 		this.C.fillStyle = '#fff';
 		this.circle(32+40, y+100, 23+1.5*sint);
 		this.circle(32+40, y+55, 14+2*sint);
@@ -111,10 +114,7 @@ backgroundEffects = {
 
 		this.C.fillStyle = '#a0a0a0';
 		this.C.fillRect(-160, -160+gh*32/2, 160, 70);
-		this.C.fillRect(gw*32+64, -160+gh*32/2, 160, 70);
-
-		this.C.fillStyle='#fff';
-		
+		this.C.fillRect(gw*32+64, -160+gh*32/2, 160, 70);		
 	}
 	
 }
