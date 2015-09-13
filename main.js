@@ -1,8 +1,8 @@
 with((D=document).body.appendChild(W=D.createElement("canvas")).getContext("2d"))with(Math){
 explosion.init();
-var resizeableCanvases = [BKG, W, peopleSprites.W, explosion.W, personDeathEffects.W];
-var resizeableCtxs = [];
-resizeableCanvases.map(i=>resizeableCtxs.push(i.getContext('2d')));
+backgroundEffects.init();
+var resizeableCanvases = [BKG, W, peopleSprites.W, explosion.W, personDeathEffects.W, backgroundEffects.W];
+var resizeableCtxs = resizeableCanvases.map(i=>i.getContext('2d'));
 (onresize=e=>resizeableCanvases.map(c=>{c.width=ww=innerWidth;c.height=wh=innerHeight;}))();
 
 //==  USER DEFINABLES  =======================================================//
@@ -168,6 +168,7 @@ var tick=performance.now(),prevTick=tick;
 
 		explosion.draw();
 		personDeathEffects.process();
+		backgroundEffects.draw(tick);
 	});
 
 
