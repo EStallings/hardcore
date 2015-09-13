@@ -157,7 +157,6 @@ peopleSprites = {
 		document.body.removeChild(bodyCvs);
 		return this.sprites.length-1;
 	},
-
 	drawPerson : function(x, y, i, t) {
 		x*=32;
 		y*=32;

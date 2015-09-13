@@ -152,7 +152,7 @@ var tick=performance.now(),prevTick=tick;
 
 		var progress = clamp((tick-updateTick)/animationInterval,0,1);
 		var invP = 1-progress;
-		throng.sort((a,b)=>a.y-b.y);
+		throng.sort((a,b)=>{if(a.y == b.y){return a.spriteId-b.spriteId} return a.y-b.y});
 		throng.map(i=>actionSwitch(i.activeAction,
 			_=>peopleSprites.drawPerson(i.x,i.y,i.spriteId,tick),
 			_=>peopleSprites.drawPerson(i.x,i.y+invP,i.spriteId,tick),
@@ -185,7 +185,8 @@ var tick=performance.now(),prevTick=tick;
 			if(y<gh-1)adjacentCells=adjacentCells.concat(grid[x][y+1]);
 			adjacentCells.map(j=>{
 				throng.splice(throng.indexOf(j),1);
-				personDeathEffects.newEffect(j.x, j.y,2);
+				console.log(j);
+				personDeathEffects.newEffect(j.x, j.y,peopleSprites.sprites[j.spriteId].flairColor);
 				if(j.player)deads.push(j.player);
 				if(i===j)return;
 				if(j.player)i.player.points += 5;
