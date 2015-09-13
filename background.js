@@ -78,7 +78,7 @@ backgroundEffects = {
 		this.C.fillStyle = '#333';
 		this.C.fillRect(32, -90, 80, 110);
 		this.C.fillRect(gw*32-80+32, -90, 80, 110);
-	
+
 		this.C.fillRect(-160, -90, 160, gh*32+160-32);
 		this.C.fillRect(gw*32+64, -90, 160, gh*32+160-32);
 		this.C.fillStyle = '#222';
@@ -104,7 +104,6 @@ backgroundEffects = {
 			that.speaker(x-40, y+50, 24+1.5*sint);
 			that.speaker(x+40, y+50, 24+1.5*sint);
 			that.speaker(x, y+130, 50+3*sint);
-			
 		}
 		pattern1(this, -80, 0);
 		pattern1(this, -80, gh*32/2);
@@ -115,7 +114,7 @@ backgroundEffects = {
 
 		this.C.fillStyle = '#222';
 		this.C.fillRect(-160, -160+gh*32/2, 160, 70);
-		this.C.fillRect(gw*32+64, -160+gh*32/2, 160, 70);		
+		this.C.fillRect(gw*32+64, -160+gh*32/2, 160, 70);
 	}
-	
+
 }
