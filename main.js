@@ -19,10 +19,14 @@ var renderScale = 40;
 
 var clamp = (i,n,x) => min(max(i,n),x);
 
-//var rgb = (r,g,b,a) => fillStyle=strokeStyle=shadowColor=`rgba(${~~(255*r)},${~~(255*g)},${~~(255*b)},${a===0?0:a||1})`;
 var rgb = (r,g,b,a) => fillStyle=strokeStyle=shadowColor="rgba("+~~(255*r)+","+~~(255*g)+","+~~(255*b)+","+(a===0?0:a||1)+")";
 var pushPop = f => { resizeableCtxs.map(i=>i.save()); f(); resizeableCtxs.map(i=>i.restore()); };
 var fillCircle = (x,y,r) => { beginPath(); arc(x,y,r,0,2*PI); fill(); };
+var image = src => {
+	var retval = new Image();
+	retval.src = src;
+	return retval;
+}
 
 var id =_=>0;
 
@@ -31,6 +35,7 @@ var id =_=>0;
 animationInterval = min(updateInterval,animationInterval);
 var updateTick = performance.now();
 var animating = true;
+var init = true;
 
 var NONE  = 0;
 var NORTH = 1;
@@ -116,10 +121,10 @@ var player = function(ctlU,ctlD,ctlL,ctlR,ctlB) {
 
 for (var i=0;i<20;++i) new person(~~(random()*gw),~~(random()*gh));
 
-var P1 = new player(87,83,65,68,81);
-var P2 = new player(79,76,75,59,73);
+// var P1 = new player(87,83,65,68,81);
+// var P2 = new player(79,76,75,59,73);
 
-onkeydown = e => {
+var gameKeyListener = e => {
 	var k = e.keyCode;
 	scrubs.map(i=>{
 		if(k===i.ctlU)i.person.pendingAction = NORTH;
@@ -161,8 +166,6 @@ var tick=performance.now(),prevTick=tick;
 			_=>peopleSprites.drawPerson(i.x-invP,i.y,i.spriteId,tick)
 		));
 
-		rgb(1,0,0);fillCircle(P1.person.x,P1.person.y,0.5);
-		rgb(0,1,0);fillCircle(P2.person.x,P2.person.y,0.5);
 		explosion.draw();
 		personDeathEffects.process();
 	});
@@ -195,8 +198,13 @@ var tick=performance.now(),prevTick=tick;
 		});
 		deads.map(i=>i.reassign());
 		throng.map((e,i)=>{if(!e.player)e.pendingAction = ~~(random()*5)});
-		console.log("P1: "+P1.points+" | P2: "+P2.points);
+		// console.log("P1: "+P1.points+" | P2: "+P2.points);
 	}
+
+	if(init) {
+		showIntro();
+		onkeydown = introKeyListener;
+	} else onkeydown = gameKeyListener;
 }))();
 
 }
