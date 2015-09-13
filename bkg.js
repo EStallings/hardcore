@@ -38,9 +38,15 @@ var drawBkg =_=>{ with(bkg) pushPop(_=>{
 	scale(1/32, 1/32);
 	//Scores
 	font = 'Italic 35px Impact';
-	fillStyle = "#FFF";
 	var boxwidth = 220;
 	scrubs.map((i, id)=>{
-		fillText("PLAYER " + (id+1) + " : " + ((i.points < 0) ? "-" : "+") + "" + ("00"+Math.abs(i.points)).slice(-2), ((id-scrubs.length/2)*(boxwidth)) + gw*16 + 10, gh*32+64);
+		var scoreOffset = measureText("PLAYER " + (id+1) + " : ").width;
+		fillStyle = "#FFF";
+		fillText("PLAYER " + (id+1) + " : ", ((id-scrubs.length/2)*(boxwidth)) + gw*16 + 10, gh*32+64);
+		fillStyle = (i.points < 0) ? "#f08" : "#8f0";
+		fillText(((i.points < 0) ? "-" : "+") + "" + ("00"+Math.abs(i.points)).slice(-2), scoreOffset+((id-scrubs.length/2)*(boxwidth)) + gw*16 + 10, gh*32+64);
 	});
+
+	fillStyle = '#FFF';
+	fillText("ESC to Mute", gw*32/2-56-32, gh*32+150);
 })}
