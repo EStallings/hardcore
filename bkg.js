@@ -14,23 +14,36 @@ function hue(h){
 }
 
 var drawBkg =_=>{ with(bkg) pushPop(_=>{
-  scale(32,32);
-  translate(-0.25,-0.15);
-  translate(-gw/2,-gh/2);
+	scale(32,32);
+	translate(-0.25,-0.15);
+	translate(-gw/2,-gh/2);
 
-  shadowBlur = 0;
-  for(var i=0;i<gw;++i)for(var j=0;j<gh;++j){
-    var x = i+0.5-gw/2;
-    var y = j+0.5-gh/2;
-    fillStyle = shadowColor = hue(tick*0.0003+(x*x+y*y)*2.35*Math.sin(tick*0.000003));
-    fillRect(i+0.025,j+0.025,0.95,0.95);
-  }shadowBlur = 0;
+	shadowBlur = 0;
+	for(var i=0;i<gw;++i)for(var j=0;j<gh;++j){
+		var x = i+0.5-gw/2;
+		var y = j+0.5-gh/2;
+		fillStyle = shadowColor = hue(tick*0.0003+(x*x+y*y)*2.35*Math.sin(tick*0.000003));
+		fillRect(i+0.025,j+0.025,0.95,0.95);
+	}shadowBlur = 0;
 
-  fillStyle = "rgba(0,0,0,0.7)"
-  for(var i=0;i<gw;++i)for(var j=0;j<gh;++j)
-    fillRect(i+0.025,j+0.025,0.95,0.95);
+	fillStyle = "rgba(0,0,0,0.7)"
+	for(var i=0;i<gw;++i)for(var j=0;j<gh;++j)
+		fillRect(i+0.025,j+0.025,0.95,0.95);
 
-  fillStyle = "rgba(0,0,0,0.75)"
-  for(var i=0;i<gw;++i)for(var j=0;j<gh;++j)
-    fillRect(i+0.1,j+0.1,0.8,0.8);
+	fillStyle = "rgba(0,0,0,0.75)"
+	for(var i=0;i<gw;++i)for(var j=0;j<gh;++j)
+		fillRect(i+0.1,j+0.1,0.8,0.8);
+
+
+	scale(1/32, 1/32);
+	//Scores
+	font = 'Italic 35px Impact';
+	fillStyle = "#FFF";
+	var boxwidth = 220;
+	var negWidth = measureText('-').width;
+	var numWidth = measureText('0').width;
+	scrubs.map((i, id)=>{
+		// if(Math.abs(i.points) < 10) extraWidth += numWidth;
+		fillText("PLAYER " + (id+1) + " : " + ((i.points >= 0) ?  '+' : '') + ((Math.abs(i.points) < 10) ?  '0' : '') + i.points, ((id-scrubs.length/2)*(boxwidth)) + gw*16 + 10, gh*32+64);
+	});
 })}
